@@ -1,0 +1,18 @@
+<%- include('common/header'); %>
+<h1>Личный рейтинг</h1>
+<p>Так Илья Якямсев видит стендап.</p>
+
+<% for (myCounter=10; myCounter > 0; myCounter--) { %>
+<h2><%= myCounter %></h2>
+<%  if (webPageData[myCounter]) {    %>
+<ul>
+<%      for (var concert in webPageData[myCounter]) {%>
+    <li>
+<%=JSON.stringify(webPageData[myCounter][concert].title, null, 2) %>
+    </li>
+
+<%      }%>    
+</ul>
+<%  }%>
+<% }; %>
+<%- include('common/footer'); %>

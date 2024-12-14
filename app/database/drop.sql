@@ -1,0 +1,1 @@
+DROP TABLE media, persons, roles, collaborators, media_sources, paywalls, views, raiting CASCADE;

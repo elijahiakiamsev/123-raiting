@@ -4,13 +4,15 @@
   "main": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon ./src/index.mjs",
-    "start": "node ./src/index.mjs"
+    "start:dev": "nodemon ./app/index.mjs",
+    "start": "node ./app/index.mjs"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
