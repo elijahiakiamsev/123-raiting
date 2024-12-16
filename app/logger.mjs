@@ -16,7 +16,8 @@ let alignColorsAndTime = winston.format.combine(
 );
 
 export const logger = winston.createLogger({
-    level:'debug',
+//  process.env.LOGLEVEL
+    level: 'debug',
     format: winston.format.combine(
         winston.format.errors({stack:true}),
         winston.format.timestamp(),
@@ -29,4 +30,5 @@ export const logger = winston.createLogger({
       new winston.transports.Console(),
       new winston.transports.File({ filename: 'logs/combined.log' })
     ]
-  });
+  }
+);

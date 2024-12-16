@@ -3,16 +3,16 @@ import path from 'node:path';
 import dotenv from 'dotenv';
 import {logger} from "./logger.mjs";
 
-const { Client } = pg;
-
-const __dirname = import.meta.dirname;
+const __dirname = import.meta.dirname + '/../';
 
 dotenv.config({
     override: true,
     path: path.join(__dirname, '.env')
 });
 
-logger.info(path.join(__dirname,'.env is working'));
+const { Client } = pg;
+
+logger.debug(path.join(__dirname,'.env is working'));
 
 const dbClientConfig = {
     user: process.env.USER,
@@ -26,7 +26,7 @@ async function getPersonalRaitingDB(person_uri) {
     logger.debug('*** getPersonalRaitingDB starts, person_uri = ' + person_uri);
     if (person_uri == '') {
         logger.error();
-        return NULL;
+        return;
     }
     const client = new Client(dbClientConfig);
     try {
@@ -35,7 +35,7 @@ async function getPersonalRaitingDB(person_uri) {
     } catch(err) {
         logger.error(err);
         await client.end();
-        return NULL
+        return
     }
     const query = {
         text: `SELECT raiting.media_raiting, media.uri, media.title
@@ -74,32 +74,3 @@ export async function getPersonalRaiting(person_uri) {
     logger.debug('*** getPersonalRaiting ends');
     return result;
 };
-
-async function testDB() {
-    logger.debug('*** testDB connection starts');
-    const client = new Client(dbClientConfig);
-    try {
-        await client.connect();
-        logger.debug('Database connected')
-    } catch(err) {
-        logger.error(err);
-        await client.end();
-        return NULL
-    }
-    try {
-        const query = 'SELECT * FROM PERSONS WHERE id = 1;';
-        const res = await client.query(query);
-        logger.info('testDB response recieved, person_name = ' + res.rows[0].person_name);
-        return res.rows;
-     } catch (err) {
-        logger.error(err)
-     } finally {
-        await client.end();
-        ('*** testDB ends')
-     }  
-};
-
-// testDB();
-// const person = 'Ilia_Iakiamsev';
-// const test_result = await getPersonalRaiting(person);
-// console.log(test_result);
