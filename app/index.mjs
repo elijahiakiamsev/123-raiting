@@ -1,6 +1,7 @@
 import express from "express";
 import {getPersonalRaiting} from "./database.mjs";
 import {logger} from "./logger.mjs";
+import path from 'path';
 
 const app = express();
 logger.info('App Started. Hello!');
@@ -34,6 +35,10 @@ app.get('/p/:name_uri/raiting', async (request, response) => {
         return
     }
     response.render('person_raiting.ejs', {webPageData: webPageData});
+})
+
+app.get('/privacy_policy/', (request, response) => {
+    response.sendFile(path.resolve(import.meta.dirname + '/../views/direct-html/privacy_policy.html'));
 })
 
 app.listen(APPPORT, () => {

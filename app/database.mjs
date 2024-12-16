@@ -50,13 +50,13 @@ async function getPersonalRaitingDB(person_uri) {
     } 
     try {
         const res = await client.query(query);
-        logger.info('DB response recieved' + res.rows[0])
+        logger.debug('DB response recieved ' + res.rows);
         return res.rows;
      } catch (err) {
-        logger.error(err)
+        logger.error(err);
      } finally {
         await client.end();
-        ('*** getPersonalRaitingDB ends')
+        logger.debug('*** getPersonalRaitingDB ends')
      }
 }
 
