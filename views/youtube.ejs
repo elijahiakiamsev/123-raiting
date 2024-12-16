@@ -1,0 +1,14 @@
+<%- include('common/header'); %>
+<h1>Youtube рейтинг</h1>
+<p>Рейтинг обновляется примерно раз в день.</p>
+<table>
+<% for (myCounter=0; myCounter < webPageData.length; myCounter++) { %>
+<tr>
+    <td><%= myCounter %></td>
+    <td><%= webPageData[myCounter].title %></td>
+    <td><%= webPageData[myCounter].person_name %></td>
+    <td><%= webPageData[myCounter].views_count %></td>
+</tr>
+    <% } %>
+</table>
+<%- include('common/footer'); %>

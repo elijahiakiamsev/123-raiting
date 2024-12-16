@@ -1,4 +1,22 @@
-INSERT INTO views (media_source_id, scan_date, views_count)
-SELECT counters.media_id, CURRENT_TIMESTAMP, counters.views
-FROM json_to_recordset('[{"media_id":1,"views":10000}]')
-AS counters (media_id INTEGER, views INTEGER);
+SELECT media_id, views_count, title, person_name
+FROM media_sources 
+JOIN (
+    SELECT 
+        media_source_id, 
+        scan_date, 
+        views_count,
+        ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num
+    FROM views
+) RankedMedia
+ON RankedMedia.media_source_id = media_sources.id AND RankedMedia.row_num = 1
+JOIN media
+ON media_sources.media_id = media.id
+JOIN
+    (
+        SELECT media_id as m_id, person_id
+        FROM collaborators
+        WHERE collaborators.role_id = 1
+    ) AS comedians
+ON comedians.m_id = media_id
+JOIN persons
+ON persons.id = person_id;

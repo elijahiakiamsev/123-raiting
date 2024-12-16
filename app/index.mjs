@@ -1,6 +1,7 @@
 import express from "express";
 import {getPersonalRaiting} from "./database.mjs";
 import {logger} from "./logger.mjs";
+import {getYoutubeRaiting} from "./youtube-output.mjs";
 import path from 'path';
 
 const app = express();
@@ -35,6 +36,20 @@ app.get('/p/:name_uri/raiting', async (request, response) => {
         return
     }
     response.render('person_raiting.ejs', {webPageData: webPageData});
+})
+
+app.get('/youtube/', async (request, response) => {
+    var webPageData = {};
+    webPageData = await getYoutubeRaiting();
+//    webPageData['person_name'] = await getPersonName(name_uri);
+    logger.debug('Youtube raiting delivered');
+    console.log(JSON.stringify(webPageData, null, 2));
+    if (!webPageData) {
+        logger.error('Validation: the delivered result is empty.');
+        response.status(404).send('404 - no that page');
+        return
+    }
+    response.render('youtube.ejs', {webPageData: webPageData});
 })
 
 app.get('/privacy_policy/', (request, response) => {
