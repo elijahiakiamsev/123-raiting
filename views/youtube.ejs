@@ -2,9 +2,15 @@
 <h1>Youtube рейтинг</h1>
 <p>Рейтинг обновляется примерно раз в день.</p>
 <table>
+<tr>
+    <th></th>
+    <th>Концерт</th>
+    <th>Комик</th>
+    <th>Просмотры</th>
+</tr>
 <% for (myCounter=0; myCounter < webPageData.length; myCounter++) { %>
 <tr>
-    <td><%= myCounter %></td>
+    <td><%= myCounter+1 %></td>
     <td><%= webPageData[myCounter].title %></td>
     <td><%= webPageData[myCounter].person_name %></td>
     <td><%= webPageData[myCounter].views_count %></td>
