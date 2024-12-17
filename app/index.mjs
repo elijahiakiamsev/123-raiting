@@ -1,4 +1,8 @@
 import express from "express";
+
+import {ignition} from "./initenv.mjs"
+await ignition();
+
 import {getPersonalRaiting} from "./database.mjs";
 import {logger} from "./logger.mjs";
 import {getYoutubeRaiting} from "./youtube-output.mjs";
@@ -29,7 +33,6 @@ app.get('/p/:name_uri/raiting', async (request, response) => {
     webPageData = await getPersonalRaiting(name_uri);
 //    webPageData['person_name'] = await getPersonName(name_uri);
     logger.debug('Personal raiting delivered');
-    console.log(JSON.stringify(webPageData, null, 2));
     if (!webPageData) {
         logger.error('Validation: the delivered result is empty.');
         response.status(404).send('404 - no that page');
@@ -43,7 +46,6 @@ app.get('/youtube/', async (request, response) => {
     webPageData = await getYoutubeRaiting();
 //    webPageData['person_name'] = await getPersonName(name_uri);
     logger.debug('Youtube raiting delivered');
-    console.log(JSON.stringify(webPageData, null, 2));
     if (!webPageData) {
         logger.error('Validation: the delivered result is empty.');
         response.status(404).send('404 - no that page');

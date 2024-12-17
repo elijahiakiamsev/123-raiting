@@ -16,14 +16,9 @@ let alignColorsAndTime = winston.format.combine(
 );
 
 export const logger = winston.createLogger({
-//  process.env.LOGLEVEL
-    level: 'debug',
+    level: process.env.LOGLEVEL,
     format: winston.format.combine(
         winston.format.errors({stack:true}),
-        winston.format.timestamp(),
-        winston.format.json(),
-        winston.format.prettyPrint(),
-        winston.format.colorize(),
         alignColorsAndTime
     ),
     transports: [

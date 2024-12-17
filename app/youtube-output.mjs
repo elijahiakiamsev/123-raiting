@@ -1,37 +1,7 @@
-import pg from 'pg';
-import path from 'node:path';
-import dotenv from 'dotenv';
+import {queryDB} from '../database/db.mjs';
 import {logger} from "./logger.mjs";
 
-const __dirname = import.meta.dirname + '/../';
-
-dotenv.config({
-    override: true,
-    path: path.join(__dirname, '.env')
-});
-
-const { Client } = pg;
-
-const dbClientConfig = {
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    host: process.env.HOST,
-    database: process.env.DATABASE,
-    port: process.env.PORT
-}
-
-logger.debug(path.join(__dirname,'.env is working'));
-
 async function getYoutubeRaitingFromDB() {
-    const client = new Client(dbClientConfig);
-    try {
-        await client.connect();
-        logger.debug('Database connected')
-    } catch(err) {
-        logger.error(err);
-        await client.end();
-        return
-    }
     const query = {
         text: `SELECT media_id, views_count, title, person_name
                 FROM media_sources 
@@ -57,21 +27,12 @@ async function getYoutubeRaitingFromDB() {
                     ON persons.id = person_id
                     ORDER BY views_count DESC;`
     } 
-    try {
-        const res = await client.query(query);
-        logger.debug('DB response recieved.');
-        return res.rows;
-    } catch (err) {
-        logger.error(err);
-    } finally {
-        await client.end();
-        logger.debug('*** getPersonalRaitingDB ends')
-    }
-    return res.rows;
+    const res = queryDB(query);
+    logger.debug('*** getPersonalRaitingDB ends')
+    return res;
 }
 
 export async function getYoutubeRaiting() {
     const result = await getYoutubeRaitingFromDB();
-    console.log(result);
     return result;
 }

@@ -1,30 +1,11 @@
 // getting everything about concert from youtube
 import fetch from 'node-fetch';
-import pg from 'pg';
-import path from 'node:path';
-import dotenv from 'dotenv';
+
+import {ignition} from "./initenv.mjs"
+await ignition();
+
 import {logger} from "./logger.mjs";
-import { createDeflateRaw } from 'node:zlib';
-import { resourceLimits } from 'node:worker_threads';
-
-const __dirname = import.meta.dirname + '/../';
-
-dotenv.config({
-    override: true,
-    path: path.join(__dirname, '.env')
-});
-
-const { Client } = pg;
-
-logger.debug(path.join(__dirname,'.env is working'));
-
-const dbClientConfig = {
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    host: process.env.HOST,
-    database: process.env.DATABASE,
-    port: process.env.PORT
-}
+import {queryDB} from '../database/db.mjs';
 
 const youtubeApiKey = process.env.YOUTUBEKEY;
 console.log(youtubeApiKey);
@@ -38,33 +19,14 @@ function youtubeUrlParser(url) {
 
 // get the list of videos from base (uri's)
 async function getYoutubeStatUriList() {
-    const client = new Client(dbClientConfig);
-        try {
-            await client.connect();
-            logger.debug('Database connected')
-        } catch(err) {
-            logger.error(err);
-            await client.end();
-            return
-        }
     const query = {
         text: `SELECT media_sources.media_id, media_sources.web_link
         FROM media_sources
         WHERE paywall_id = 1;`
     }
 
-    try {
-        const res = await client.query(query);
-        logger.debug('DB response recieved ' + res.rows);
-        console.log(res.rows);
-        return res.rows;
-     } catch (err) {
-        logger.error(err);
-     } finally {
-        await client.end();
-     };
-
-    return res.rows;
+    const res = await queryDB(query);
+    return res;
 };
 // read the whole list on fetch
 function createUrl(videoUrl) {
@@ -106,15 +68,6 @@ async function getVideoListStats(videoList) {
 };
 // save new data to base
 async function storeScanResults(listOfStatistics) {
-    const client = new Client(dbClientConfig);
-        try {
-            await client.connect();
-            logger.debug('Database connected')
-        } catch(err) {
-            logger.error(err);
-            await client.end();
-            return
-        }
     const query = {
         text: `INSERT INTO views (media_source_id, scan_date, views_count)
                 SELECT counters.media_id, CURRENT_TIMESTAMP, counters.views
@@ -122,16 +75,7 @@ async function storeScanResults(listOfStatistics) {
                 AS counters (media_id INTEGER, views INTEGER);`,
         values: [JSON.stringify(listOfStatistics)]
     }
-
-    try {
-        const res = await client.query(query);
-        logger.debug('DB response recieved ');
-     } catch (err) {
-        logger.error(err);
-     } finally {
-        await client.end();
-     };
-    
+    await queryDB(query);
 }
 
 const videoList = await getYoutubeStatUriList();
