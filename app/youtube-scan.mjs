@@ -8,7 +8,7 @@ import {logger} from "./logger.mjs";
 import {queryDB} from '../database/db.mjs';
 
 const youtubeApiKey = process.env.YOUTUBEKEY;
-console.log(youtubeApiKey);
+
 const youtubeFixedURI = 'https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=';
 
 function youtubeUrlParser(url) {
@@ -18,22 +18,20 @@ function youtubeUrlParser(url) {
 }
 
 // get the list of videos from base (uri's)
-async function getYoutubeStatUriList() {
+async function getYoutubeStatUriListDB() {
     const query = {
         text: `SELECT media_sources.media_id, media_sources.web_link
         FROM media_sources
         WHERE paywall_id = 1;`
     }
-
     const res = await queryDB(query);
     return res;
 };
 // read the whole list on fetch
 function createUrl(videoUrl) {
     logger.debug('***Creating Youtube URL from ' + videoUrl);
-    const videoID = youtubeUrlParser(videoUrl);
     const url = youtubeFixedURI
-                + videoID
+                + videoUrl
                 + '&key='
                 + youtubeApiKey;
     logger.debug('***Youtube URL : ' + url);
@@ -49,25 +47,31 @@ async function getVideoStats(videoUri) {
         }
     });
     const body = await response.json();
-    const result = body.items[0].statistics.viewCount;
+    const result = body.items;
     return result;
     };
 
 async function getVideoListStats(videoList) {
     console.log(videoList.length);
-    var result = [];
+    var videoUri = '';
     for (var i=0; i < videoList.length; i++) {
-        const count = await getVideoStats(videoList[i].web_link);
-        const resultsCombined = {
-            'media_id': videoList[i].media_id,
-            'views': count
-        };
-        result.push(resultsCombined)
+        const videoID = youtubeUrlParser(videoList[i].web_link);
+        videoUri = videoUri.concat(videoID, ',');
+    }
+    videoUri = videoUri.slice(0, -1);
+    var statsPack = await getVideoStats(videoUri);
+    console.log(statsPack);
+    var result = [];
+    for (var c = 0; c < statsPack.length; c++){
+        var media_id = videoList[c].media_id;
+        var count = Number(statsPack[c].statistics.viewCount);
+        result.push({'media_id':media_id,'views': count})
     };
+    console.log(result);
     return result;
 };
 // save new data to base
-async function storeScanResults(listOfStatistics) {
+async function storeScanvideoUris(listOfStatistics) {
     const query = {
         text: `INSERT INTO views (media_source_id, scan_date, views_count)
                 SELECT counters.media_id, CURRENT_TIMESTAMP, counters.views
@@ -78,6 +82,6 @@ async function storeScanResults(listOfStatistics) {
     await queryDB(query);
 }
 
-const videoList = await getYoutubeStatUriList();
-const readyStats = await getVideoListStats(videoList);
-await storeScanResults(readyStats);
+const videoList = await getYoutubeStatUriListDB();
+const readyStats = await getVideoListStats(videoList.rows);
+storeScanvideoUris(readyStats);

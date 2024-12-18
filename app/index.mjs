@@ -1,9 +1,7 @@
 import {ignition} from './initenv.mjs'
 await ignition();
 import express from "express";
-import {getPersonalRaiting} from "./database.mjs";
 import {logger} from "./logger.mjs";
-import {getYoutubeRaiting} from "./youtube-output.mjs";
 import path from 'path';
 
 import {indexRouter} from './routes/index.mjs'
