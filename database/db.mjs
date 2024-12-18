@@ -19,6 +19,7 @@ export async function connectDB() {
         logger.debug('Database pool connected')
     } catch(err) {
         logger.error(err);
+        logger.debug('Database pool is not connected')
         await pool.end();
         return
     }
@@ -26,7 +27,7 @@ export async function connectDB() {
 }
 
 export function getDB() {
-  return db
+    return db;
 }
 
 export async function endDB() {
@@ -39,29 +40,24 @@ export async function queryDB(query) {
         logger.error('No query for database')
         return;
     };
-
-    const db = getDB();
-    console.log(typeof(db));
-
     try {
         const res = await db.query(query);
-        logger.debug('DB response recieved ' + res.rows);
-        return res.rows;
+        logger.debug('DB response recieved, example: ' + JSON.stringify(res.rows[0]));
+        return res;
      } catch (err) {
         logger.error(err);
-     } finally {
-        logger.debug('*** getPersonalRaitingDB ends')
      }
 };
 
 export async function testDB() {
     const query = 'SELECT * FROM PERSONS WHERE id = 1;';
     const res = await queryDB(query);
-    var testResult = false;
-    console.log('testDB response recieved, person_name = ' + res[0].person_name);
-    if (res[0].person_name == 'Илья Якямсев') {
-        testResult = true;
+    var testResult = true;
+    if (res.rows[0].person_name != 'Илья Якямсев') {
+        testResult = false;
+        logger.error('testDB: Something wrong with the database')
+        return testResult
     }
-    console.log('*** testDB ends');
-    return testResult;  
+    logger.debug('testDB: Test passed, database is working');
+    return testResult;
 };

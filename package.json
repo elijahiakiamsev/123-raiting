@@ -8,11 +8,24 @@
     "start": "node ./app/index.mjs"
   },
   "dependencies": {
+    "connect-ensure-login": "^0.1.1",
+    "connect-pg-simple": "^10.0.0",
+    "connect-sqlite3": "^0.9.13",
+    "cookie-parser": "~1.4.4",
+    "csurf": "^1.2.2",
+    "debug": "~2.6.9",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "express-session": "^1.17.2",
+    "http-errors": "~1.6.3",
+    "mkdirp": "^1.0.4",
     "node-fetch": "^3.3.2",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.13.1",
+    "pluralize": "^8.0.0",
+    "sqlite3": "^5.0.2",
     "winston": "^3.17.0"
   },
   "devDependencies": {
