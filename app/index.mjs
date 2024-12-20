@@ -17,8 +17,8 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({limit: '5000mb', extended: true, parameterLimit: 100000000000}));
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session(session));
 
 app.use(routes);
 
