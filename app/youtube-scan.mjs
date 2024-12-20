@@ -1,10 +1,10 @@
 // getting everything about concert from youtube
 import fetch from 'node-fetch';
 
-import {ignition} from "./initenv.mjs"
+import ignition from "./initenv.mjs"
 await ignition();
 
-import {logger} from "./logger.mjs";
+import logger from "./logger.mjs";
 import {queryDB, endDB} from '../database/db.mjs';
 
 const youtubeApiKey = process.env.YOUTUBEKEY;
