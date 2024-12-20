@@ -1,0 +1,28 @@
+<%- include('common/header'); %>
+<h1>Добавьте медиа</h1>
+<a href ="/editor/media/">На страницу с медиа.</a> 
+<form action="/editor/media/" method="post" enctype="multipart/form-data">
+    <label for="title">Title</label><br>
+    <input type="text" id="title" name="title"/><br>
+    <label for="uri">Uri</label><br>
+    <input type="text" name="uri"/><br>
+    <label for="url">Url</label><br>
+    <input type="url" name="url" /><br>
+    <label for="paywall">Paywall</label><br>
+    <select name="paywall">
+    <% for (var i=0; i < webPageData.paywalls.length; i++) { %>
+        <% paywall = webPageData.paywalls[i] %>
+        <option value="<%= paywall.id %>"><%= paywall.title %></option>
+    <% } %>
+    </select><br><br>
+    <label for="person">Comedian</label><br>
+    <select name="person">
+        <% for (var i=0; i < webPageData.persons.length; i++) { %>
+            <% person = webPageData.persons[i] %>
+        <option value="<%=person.id %>"><%=person.person_name %></option>
+        <% } %>
+    </select>
+    <br><br>
+    <button type="submit" value="Submit" />
+</form>
+<%- include('common/footer'); %>

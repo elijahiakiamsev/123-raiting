@@ -1,8 +1,31 @@
-import express from 'express';
+import {Router} from 'express';
 import {queryDB} from '../../database/db.mjs';
-import {logger} from "./../logger.mjs";
+import logger from "./../logger.mjs";
 
-export var personalRaitingRouter = express.Router();
+const router = Router();
+
+router.get('/p/', (request, response) => {
+    response.render('persons.ejs');
+});
+
+router.get('/p/:name_uri/', (request, response) => {
+    const name_uri = request.params.name_uri;
+    response.render('person.ejs', {name_uri:name_uri});
+});
+
+router.get('/p/:name_uri/raiting', async (request, response) => {
+    const name_uri = request.params.name_uri;
+    logger.debug('*** GET Personal raiting for '+ name_uri);
+    var webPageData = {};
+    webPageData = await getPersonalRaiting(name_uri);
+//    webPageData['person_name'] = await getPersonName(name_uri);
+    if (!webPageData) {
+        logger.error('Validation: the delivered result is empty.');
+        response.status(404).send('404 - no that page');
+        return
+    }
+    response.render('person_raiting.ejs', {webPageData: webPageData});
+});
 
 async function getPersonalRaitingDB(person_uri) {
     if (person_uri == '') {
@@ -22,7 +45,7 @@ async function getPersonalRaitingDB(person_uri) {
     }
     const res = queryDB(query);
     return res;
-}
+};
 
 export async function getPersonalRaiting(person_uri) {
     if (person_uri == '') {
@@ -41,16 +64,4 @@ export async function getPersonalRaiting(person_uri) {
     return result;
 };
 
-personalRaitingRouter.get('/p/:name_uri/raiting', async (request, response) => {
-    const name_uri = request.params.name_uri;
-    logger.debug('*** GET Personal raiting for '+ name_uri);
-    var webPageData = {};
-    webPageData = await getPersonalRaiting(name_uri);
-//    webPageData['person_name'] = await getPersonName(name_uri);
-    if (!webPageData) {
-        logger.error('Validation: the delivered result is empty.');
-        response.status(404).send('404 - no that page');
-        return
-    }
-    response.render('person_raiting.ejs', {webPageData: webPageData});
-})
+export default router;

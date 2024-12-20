@@ -5,7 +5,7 @@ import {ignition} from "./initenv.mjs"
 await ignition();
 
 import {logger} from "./logger.mjs";
-import {queryDB} from '../database/db.mjs';
+import {queryDB, endDB} from '../database/db.mjs';
 
 const youtubeApiKey = process.env.YOUTUBEKEY;
 
@@ -20,7 +20,7 @@ function youtubeUrlParser(url) {
 // get the list of videos from base (uri's)
 async function getYoutubeStatUriListDB() {
     const query = {
-        text: `SELECT media_sources.media_id, media_sources.web_link
+        text: `SELECT media_sources.id, media_sources.web_link
         FROM media_sources
         WHERE paywall_id = 1;`
     }
@@ -63,7 +63,7 @@ async function getVideoListStats(videoList) {
     console.log(statsPack);
     var result = [];
     for (var c = 0; c < statsPack.length; c++){
-        var media_id = videoList[c].media_id;
+        var media_id = videoList[c].id;
         var count = Number(statsPack[c].statistics.viewCount);
         result.push({'media_id':media_id,'views': count})
     };
@@ -84,4 +84,5 @@ async function storeScanvideoUris(listOfStatistics) {
 
 const videoList = await getYoutubeStatUriListDB();
 const readyStats = await getVideoListStats(videoList.rows);
-storeScanvideoUris(readyStats);
+await storeScanvideoUris(readyStats);
+await endDB();

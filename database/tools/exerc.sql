@@ -1,22 +1,13 @@
-SELECT media_id, views_count, title, person_name
-FROM media_sources 
-JOIN (
-    SELECT 
-        media_source_id, 
-        scan_date, 
-        views_count,
-        ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num
-    FROM views
-) RankedMedia
-ON RankedMedia.media_source_id = media_sources.id AND RankedMedia.row_num = 1
-JOIN media
-ON media_sources.media_id = media.id
-JOIN
-    (
-        SELECT media_id as m_id, person_id
-        FROM collaborators
-        WHERE collaborators.role_id = 1
-    ) AS comedians
-ON comedians.m_id = media_id
-JOIN persons
-ON persons.id = person_id;
+SELECT m.id, m.title, m.uri as uri, media_sources.id as source_id,
+web_link, collaborators.person_id as person_id,
+collaborators.role_id as role_id, person_name
+FROM ( SELECT * FROM media WHERE media.id = 4) as m
+LEFT JOIN media_sources
+ON m.id = media_sources.media_id
+LEFT JOIN collaborators
+ON m.id = collaborators.media_id
+LEFT JOIN persons
+ON collaborators.person_id = persons.id
+LEFT JOIN roles
+ON collaborators.role_id = roles.id
+WHERE role_id = 1;

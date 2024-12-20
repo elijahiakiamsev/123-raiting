@@ -1,31 +1,28 @@
-import {ignition} from './initenv.mjs'
+import ignition from './initenv.mjs'
 await ignition();
 import express from "express";
-import {logger} from "./logger.mjs";
 import path from 'path';
-
-import {indexRouter} from './routes/index.mjs'
-import {youtubeRouter} from './routes/youtube.mjs'
-import {personalRaitingRouter} from './routes/personal-raiting.mjs'
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import passport from 'passport';
+import logger from "./logger.mjs";
+import routes from './routes/index.mjs'
+import './strategies/local-strategy.mjs'
 
 const APPPORT = process.env.APPPORT || 3001;
 
 const app = express();
 logger.info('App Started. Hello!');
 app.set("view engine", "ejs");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({limit: '5000mb', extended: true, parameterLimit: 100000000000}));
 
-app.use('/', indexRouter);
-app.use('/', youtubeRouter);
-app.use('/', personalRaitingRouter);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get('/p/', (request, response) => {
-    response.render('persons.ejs');
-})
+app.use(routes);
 
-app.get('/p/:name_uri/', (request, response) => {
-    const name_uri = request.params.name_uri;
-    response.render('person.ejs', {name_uri:name_uri});
-})
+
 
 app.get('/privacy_policy/', (request, response) => {
     response.sendFile(path.resolve(import.meta.dirname + '/../public/privacy_policy.html'));

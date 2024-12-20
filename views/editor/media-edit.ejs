@@ -1,0 +1,34 @@
+<%- include('common/header'); %>
+<% var media = webPageData.media[0] %>
+<pre><%= JSON.stringify(media, null, "  ")  %></pre>
+<h1>Редактируйте медиа: <%= media.title %></h1>
+<a href ="/editor/media/">На страницу с медиа.</a> 
+<form action="/editor/media/<%=media.id%>" method="post" enctype="multipart/form-data">
+    <label for="title" >Title</label><br>
+    <input type="text" id="title" name="title" value="<%=media.title %>"/><br>
+    <label for="uri">Uri</label><br>
+    <input type="text" name="uri" value="<%=media.uri %>" /><br>
+    <label for="url">Url</label><br>
+    <input type="url" name="url" value="<%=media.web_link %>"/><br>
+    <label for="paywall">Paywall</label><br>
+    <select name="paywall">
+    <% for (var i=0; i < webPageData.paywalls.length; i++) { %>
+        <% var paywall = webPageData.paywalls[i] %>
+        <option value="<%= paywall.id %>" ><%= paywall.title %></option>
+    <% } %>
+    </select><br><br>
+    <label for="person">Comedian</label><br>
+    <select name="person">
+        <% for (var i=0; i < webPageData.persons.length; i++) { %>
+            <% person = webPageData.persons[i] %>
+        <option value="<%=person.id %>"
+            <% if(media.person_id == person.id) { %>
+                selected
+            <% }; %>
+            ><%=person.person_name %></option>
+        <% } %>
+    </select>
+    <br><br>
+    <button type="submit" value="Submit" >Submit</button>
+</form>
+<%- include('common/footer'); %>

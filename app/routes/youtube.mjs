@@ -1,8 +1,8 @@
-import express from 'express';
+import {Router} from 'express';
 import {queryDB} from '../../database/db.mjs';
-import {logger} from "./../logger.mjs";
+import logger from "./../logger.mjs";
 
-export var youtubeRouter = express.Router();
+const router = Router();
 
 async function getYoutubeRaitingFromDB() {
   const query = {
@@ -43,7 +43,7 @@ async function getYoutubeRaiting() {
   return result.rows;
 }
 
-youtubeRouter.get('/youtube/', async (request, response) => {
+router.get('/youtube/', async (request, response) => {
     var webPageData = {};
     webPageData = await getYoutubeRaiting();
 //    webPageData['person_name'] = await getPersonName(name_uri);
@@ -55,3 +55,4 @@ youtubeRouter.get('/youtube/', async (request, response) => {
     response.render('youtube.ejs', {webPageData: webPageData});
 })
 
+export default router;

@@ -1,7 +1,16 @@
-import express from 'express';
+import {Router} from 'express';
+import indexRouter from './main.mjs'
+import youtubeRouter from './youtube.mjs'
+import personasRouter from './personas.mjs'
+import editMediaRouter from './edit-media.mjs'
+import authRouter from './edit-media.mjs'
 
-export var indexRouter = express.Router();
+const router = Router();
 
-indexRouter.get('/', function(req, res, next) {
-  res.render('index.ejs');
-});
+router.use(indexRouter);
+router.use(youtubeRouter);
+router.use(personasRouter);
+router.use(editMediaRouter);
+router.use(authRouter);
+
+export default router;

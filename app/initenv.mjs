@@ -2,7 +2,7 @@ import path from 'node:path';
 import dotenv from 'dotenv';
 import {connectDB, testDB} from "../database/db.mjs";
 
-export async function ignition(envPath) {
+async function ignition(envPath) {
     if (!envPath) {
         envPath = import.meta.dirname + '/../'
     }
@@ -14,3 +14,5 @@ export async function ignition(envPath) {
     await connectDB();
     await testDB();
 }
+
+export default ignition;
