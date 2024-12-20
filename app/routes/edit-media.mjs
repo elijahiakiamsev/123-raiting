@@ -22,6 +22,16 @@ router.get('/editor/media/', async (request, response) => {
     response.render('editor/media.ejs', {webPageData: webPageData});
 })
 
+router.get('/editor/media/add', async (request, response) => {
+  const persons = await getPersonsListDB();
+  const paywalls = await getPaywallsListDB();
+  const webPageData = {
+    "persons": persons.rows,
+    "paywalls": paywalls.rows
+  };
+ response.render('editor/media-add.ejs', {webPageData: webPageData});
+});
+
 router.get('/editor/media/:id', async (request, response) => {
     var media = await getMediaByIDDB(request.params.id);
     var persons = await getPersonsListDB();
@@ -47,12 +57,13 @@ router.post('/editor/media/', upload.none(), async (request, response) => {
     response.render('editor/media-posted.ejs', {webPageData: webPageData});
 });
 
-router.get('/editor/media/:id/delete', upload.none(), async (request, response) => {
+/*
+ router.get('/editor/media/:id/delete', upload.none(), async (request, response) => {
   const id = request.params.id;
   await deleteMedia(id);
  response.redirect('/editor/media/');
 });
-
+*/
 async function deleteMedia(id) {
   const query = {
     text: `DELETE FROM media_sources WHERE media_id = ${id};
