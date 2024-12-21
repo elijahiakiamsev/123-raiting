@@ -1,6 +1,7 @@
 <%- include('common/header'); %>
 <% var media = webPageData.media[0] %>
 <pre><%= JSON.stringify(media, null, "  ")  %></pre>
+<p><%= media.release_date %></p>
 <h1>Редактируйте медиа: <%= media.title %></h1>
 <a href ="/editor/media/">На страницу с медиа.</a> 
 <form action="/editor/media/<%=media.id%>" method="post" enctype="multipart/form-data">
@@ -8,6 +9,8 @@
     <input type="text" id="title" name="title" value="<%=media.title %>"/><br>
     <label for="uri">Uri</label><br>
     <input type="text" name="uri" value="<%=media.uri %>" /><br>
+    <label for="release_date">Release date</label><br>
+    <input type="date" name="release_date" value="<% if (media.release_date) { %><%=media.release_date.toLocaleDateString('en-CA')%><% }  %>"/><br>
     <label for="url">Url</label><br>
     <input type="url" name="url" value="<%=media.web_link %>"/><br>
     <label for="paywall">Paywall</label><br>

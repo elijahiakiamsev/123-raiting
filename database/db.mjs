@@ -94,7 +94,7 @@ export async function getMediaByIDDB(id) {
     };
     var query = {
         text: `SELECT m.id, m.title, m.uri as uri, media_sources.id as source_id,
-web_link, collaborators.person_id as person_id,
+web_link, media_sources.release_date, collaborators.person_id as person_id,
 collaborators.role_id as role_id, person_name
 FROM ( SELECT * FROM media WHERE media.id = $1) as m
 LEFT JOIN media_sources

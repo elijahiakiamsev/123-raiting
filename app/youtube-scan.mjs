@@ -52,7 +52,6 @@ async function getVideoStats(videoUri) {
     };
 
 async function getVideoListStats(videoList) {
-    console.log(videoList.length);
     var videoUri = '';
     for (var i=0; i < videoList.length; i++) {
         const videoID = youtubeUrlParser(videoList[i].web_link);

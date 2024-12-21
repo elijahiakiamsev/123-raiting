@@ -95,13 +95,15 @@ async function updateMediaInStore(mediaToUpdate, id) {
     logger.debug('updateMediaInStore - main media parameters changed');    
   };
   // check source change
-  if ( mediaNow.web_link != mediaToUpdate.sources[0].url ) {
+  if ( mediaNow.web_link != mediaToUpdate.sources[0].url ||
+        mediaNow.release_date.toLocaleDateString('en-CA') != mediaToUpdate.sources[0].release_date) {
     const query = {
       text: `UPDATE media_sources
-      SET web_link=$1, paywall_id = $2
-      WHERE id = $3;`,
+      SET web_link=$1, paywall_id = $2, release_date = $3
+      WHERE id = $4;`,
       values: [mediaToUpdate.sources[0].url,
               mediaToUpdate.sources[0].paywall_id,
+              mediaToUpdate.sources[0].release_date,
               mediaToUpdate.sources[0].id]
       }
       console.log(mediaToUpdate.title);
@@ -125,15 +127,16 @@ async function saveMediaToStore(mediaToStore) {
   var uri = mediaToStore.uri;
   var person_id = mediaToStore.persons[0].person_id;
   var url = mediaToStore.sources[0].url;
+  var release_date = mediaToStore.sources[0].release_date;
   var paywall_id = mediaToStore.sources[0].paywall_id;
   const query = {
     text: `INSERT INTO media (title, uri)
     VALUES ('${title}', '${uri}');
     INSERT INTO collaborators (media_id, person_id, role_id)
     VALUES (currval(pg_get_serial_sequence('media','id')), ${person_id}, 1);
-    INSERT INTO media_sources (media_id, web_link, paywall_id)
+    INSERT INTO media_sources (media_id, web_link, release_date ,paywall_id)
     VALUES (currval(pg_get_serial_sequence('media','id')),
-    '${url}', ${paywall_id});`,
+    '${url}', '${release_date}', ${paywall_id});`,
   }
   await queryDB(query);
 };
@@ -146,7 +149,8 @@ async function prepareMediaToStore(reqBody, id) {
     "uri": reqBody.uri,
     "sources":[{
       "url": reqBody.url, 
-      "paywall_id": Number(reqBody.paywall)
+      "paywall_id": Number(reqBody.paywall),
+      "release_date": reqBody.release_date
     }],
     "persons": [{
       "person_id": Number(reqBody.person)
