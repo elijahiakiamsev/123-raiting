@@ -96,7 +96,7 @@ async function updateMediaInStore(mediaToUpdate, id) {
   };
   // check source change
   if ( mediaNow.web_link != mediaToUpdate.sources[0].url ||
-        mediaNow.release_date.toLocaleDateString('en-CA') != mediaToUpdate.sources[0].release_date) {
+        mediaNow.release_date == null || mediaNow.release_date.toLocaleDateString('en-CA') != mediaToUpdate.sources[0].release_date) {
     const query = {
       text: `UPDATE media_sources
       SET web_link=$1, paywall_id = $2, release_date = $3
@@ -143,6 +143,7 @@ async function saveMediaToStore(mediaToStore) {
 
 async function prepareMediaToStore(reqBody, id) {
   if (!id) {id = null};
+  console.log(reqBody);
   var result = {
     "id": id,
     "title": reqBody.title,
