@@ -12,7 +12,7 @@
 <%  var myRow = webPageData.rows[myCounter] %>
 <tr>
     <td><%= myRow.id %></td>
-    <td><a href="<%= myRow.id %>/">
+    <td><a href="/editor/media/<%= myRow.id %>/">
         <%= myRow.title %></a></td>
     <td><%= myRow.person_name %></td>
     <td><form action="/editor/media/<%=myRow.id%>/delete/" method="delete" enctype="multipart/form-data">

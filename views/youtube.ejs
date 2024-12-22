@@ -14,7 +14,7 @@
     <td><%= myCounter+1 %></td>
     <td><%= webPageData[myCounter].title %></td>
     <td><%= webPageData[myCounter].person_name %></td>
-    <td><%= webPageData[myCounter].views_count %></td>
+    <td style="text-align:right"><%= webPageData[myCounter].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".") %></td>
 </tr>
     <% } %>
 </table>
