@@ -102,7 +102,7 @@ async function getYoutubeStatsByPages() {
     logger.debug(pagesCount + ' pages to get stats.')
     var fullStats = [];
     for (var i=0; i < pagesCount; i++) {
-        var videoList = await getYoutubeStatUriListDB(i, itemsOnQuery);
+        var videoList = await getYoutubeStatUriListDB(i*itemsOnQuery, itemsOnQuery);
         var readyStats = await getVideoListStats(videoList.rows);
         fullStats.push(...readyStats);
     }
