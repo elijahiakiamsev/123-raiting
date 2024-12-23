@@ -22,7 +22,9 @@ app.use(bodyParser.urlencoded({limit: '5000mb', extended: true, parameterLimit: 
 
 app.use(routes);
 
+app.post('/auth/', passport.authenticate('local'), (request, response) => {
 
+});
 
 app.get('/privacy_policy/', (request, response) => {
     response.sendFile(path.resolve(import.meta.dirname + '/../public/privacy_policy.html'));

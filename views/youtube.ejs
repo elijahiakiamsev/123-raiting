@@ -12,9 +12,9 @@
 <% for (myCounter=0; myCounter < webPageData.length; myCounter++) { %>
 <tr>
     <td><%= myCounter+1 %></td>
-    <td><%= webPageData[myCounter].title %></td>
+    <td><a href="<%= webPageData[myCounter].web_link %>"><%= webPageData[myCounter].title %></a></td>
     <td><%= webPageData[myCounter].person_name %></td>
-    <td style="text-align:right"><%= webPageData[myCounter].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".") %></td>
+    <td style="text-align:right"><%= webPageData[myCounter].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
 </tr>
     <% } %>
 </table>

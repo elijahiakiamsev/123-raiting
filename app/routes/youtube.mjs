@@ -6,7 +6,7 @@ const router = Router();
 
 async function getYoutubeRaitingFromDB() {
   const query = {
-      text: `SELECT media_id, views_count, title, person_name
+      text: `SELECT media_id, views_count, title, web_link, person_name
               FROM media_sources 
               JOIN (
                   SELECT 
