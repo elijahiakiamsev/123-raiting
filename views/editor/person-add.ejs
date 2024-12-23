@@ -1,0 +1,13 @@
+<%- include('common/header'); %>
+<h1>Добавьте персону</h1>
+<a href ="/editor/persons/">На страницу с персонами.</a> 
+<form action="/editor/persons/" method="post" enctype="multipart/form-data">
+    <label for="title">Name</label><br>
+    <input type="text" id="person_name" name="person_name"/><br>
+    <label for="uri">Uri</label><br>
+    <input type="text" name="uri"/><br>
+    <label for="url">Pronounce</label><br>
+    <input type="text" name="self_identity" /><br><br>
+    <button type="submit" value="Submit">Submit</button>
+</form>
+<%- include('common/footer'); %>

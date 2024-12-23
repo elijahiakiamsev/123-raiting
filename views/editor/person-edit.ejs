@@ -1,0 +1,22 @@
+<%- include('common/header'); %>
+<%
+const person = webPageData.person;
+const paywalls = webPageData.paywalls;
+const collab = webPageData.collab;
+%>
+<h1>Редактируйте персону: <%= person.person_name %></h1>
+<a href ="/editor/persons">На страницу с персонами.</a> 
+<form action="/editor/persons/<%=person.id%>/" method="post" enctype="multipart/form-data">
+    <label for="title">Name</label><br>
+    <input type="text" id="person_name" name="person_name" value="<%=person.person_name%>"/><br>
+    <label for="uri">Uri</label><br>
+    <input type="text" name="uri" value="<%=person.uri%>"/><br>
+    <label for="url">Pronounce</label><br>
+    <input type="text" name="self_identity"  value="<%=person.self_identity%>" /><br><br>
+    <button type="submit" value="Submit">Submit</button>
+</form>
+
+<pre><%= JSON.stringify(person, null, "  ")  %></pre>
+<pre><%= JSON.stringify(paywalls, null, "  ")  %></pre>
+<pre><%= JSON.stringify(collab, null, "  ")  %></pre>
+<%- include('common/footer'); %>

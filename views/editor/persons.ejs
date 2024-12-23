@@ -1,0 +1,23 @@
+<%- include('common/header'); %>
+<h1>Персоны</h1>
+<p><a href="add/">+ Добавить персону</a></p>
+<table>
+<tr>
+    <th>id</th>
+    <th>Персона</th>
+    <th>Удалить</th>
+</tr>
+<% for (var myCounter=0; myCounter < webPageData.rows.length; myCounter++) { %>
+<%  var myRow = webPageData.rows[myCounter] %>
+<tr>
+    <td><%= myRow.id %></td>
+    <td><a href="/editor/persons/<%= myRow.id %>/">
+        <%= myRow.person_name %></a></td>
+    <td><form action="/editor/persons/<%=myRow.id%>/delete/" method="delete" enctype="multipart/form-data">
+        <button type="submit" value="Submit">Удалить</button>
+    </form></td>
+</tr>
+    <% } %>
+</table>
+
+<%- include('common/footer'); %>

@@ -99,7 +99,7 @@ async function getYoutubeStatsByPages() {
     const videosCount = await getYoutubeVideoCountDB();
     const itemsOnQuery = 49;
     const pagesCount = Math.floor(Number(videosCount)/itemsOnQuery) + 1;
-    logger.debug(pagesCount + ' pages to get stats.')
+    logger.debug(videosCount + ' videos, ' + pagesCount + ' pages to get stats.')
     var fullStats = [];
     for (var i=0; i < pagesCount; i++) {
         var videoList = await getYoutubeStatUriListDB(i*itemsOnQuery, itemsOnQuery);
