@@ -1,6 +1,15 @@
 <%- include('common/header'); %>
+<% const raiting = webPageData.youtubeRaiting
+   const dateOptions = {
+dateStyle: 'full',
+    timeStyle: 'short',
+    timeZone: 'Europe/Moscow'}%>
+
 <h1>Youtube рейтинг</h1>
-<p>Рейтинг обновляется примерно раз в день.</p>
+<p>Рейтинг обновляется примерно раз в день.
+    Последнее обновление:
+    <%= webPageData.lastScanDate.toLocaleString("ru-RU", dateOptions) %>
+    по Москве</p>
 <p><a href="/">На главную</a></p>
 <table>
 <tr>
@@ -9,12 +18,12 @@
     <th>Комик</th>
     <th>Просмотры</th>
 </tr>
-<% for (myCounter=0; myCounter < webPageData.length; myCounter++) { %>
+<% for (i=0; i < raiting.length; i++) { %>
 <tr>
-    <td><%= myCounter+1 %></td>
-    <td><a href="<%= webPageData[myCounter].web_link %>"><%= webPageData[myCounter].title %></a></td>
-    <td><%= webPageData[myCounter].person_name %></td>
-    <td style="text-align:right"><%= webPageData[myCounter].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
+    <td><%= i+1 %></td>
+    <td><a href="<%= raiting[i].web_link %>"><%= raiting[i].title %></a></td>
+    <td><%= raiting[i].person_name %></td>
+    <td style="text-align:right"><%= raiting[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
 </tr>
     <% } %>
 </table>

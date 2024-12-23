@@ -30,23 +30,42 @@ async function getYoutubeRaitingFromDB() {
               ON persons.id = person_id
               ORDER BY views_count DESC;`
   } 
-  const res = await queryDB(query);
-  return res;
+  const result = await queryDB(query);
+  return result;
 }
+
+async function getYoutybeScanDate() {
+  const dataFromDB = await getYoutybeScanDateDB();
+  const result = dataFromDB.rows[0].max;
+  return result;
+};
+
+async function getYoutybeScanDateDB() {
+  const query = {
+    text:'SELECT max(scan_date) FROM views;'
+  }
+  const result = await queryDB(query);
+  return result;
+};
+
 
 async function getYoutubeRaiting() {
   const result = await getYoutubeRaitingFromDB();
   if (!result) {
     logger.error('Validation: the delivered result is empty.');
     return false;
-  }
+  };
   return result.rows;
-}
+};
 
 router.get('/youtube/', async (request, response) => {
     var webPageData = {};
-    webPageData = await getYoutubeRaiting();
-//    webPageData['person_name'] = await getPersonName(name_uri);
+    const youtubeRaiting = await getYoutubeRaiting();
+    const lastScanDate = await getYoutybeScanDate()
+    webPageData = {
+      'lastScanDate': lastScanDate,
+      'youtubeRaiting': youtubeRaiting
+    }
     if (!webPageData || webPageData == {}) {
       response.status(404).send('404 - no that page');
       return;
