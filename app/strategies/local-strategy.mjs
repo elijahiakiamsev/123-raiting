@@ -1,36 +1,56 @@
 import passport from 'passport';
 import {Strategy} from 'passport-local';
 import { getDB, queryDB } from '../../database/db.mjs';
+import { error } from 'console';
 
-async function getUsers() { 
-    const userQuery = queryDB('SELECT * FROM users;');
-    console.log(userQuery);
-    const userList = await userQuery.rows;
+async function getUserByName(username) { 
+    const query = {
+        text: 'SELECT * FROM users WHERE username = $1;',
+        values: [username]
+    }
+    const user = await queryDB(query);
+    const result = user.rows;
+    if (result.length == 0) return null;
+    return result;
+};
+
+async function getUserByidhash(idhash) { 
+    const query = {
+        text: 'SELECT * FROM users WHERE idhash = $1;',
+        values: [idhash]
+    }
+    const user = await queryDB(query);
+    const result = user.rows;
+    if (result.length == 0) return null;
+    return result;
 };
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.idhash);
 });
 
-passport.deserializeUser((id, done) => {
-
-    done(null, id);
+passport.deserializeUser(async (idhash, done) => {
+    try {
+        const findUser = await getUserByidhash(idhash);
+        if (findUser == null) throw error('No user with idhash ' +idhash);
+        done(null, findUser[0]);
+    } catch (error) {
+        done(error, null)
+    }
 })
 
 export default passport.use(
-    new Strategy((username, password, done) => {
+    new Strategy(async (username, password, done) => {
         console.log('Username:' + username);
         console.log('Password:' + password);
         try {
-            const findUser = userList.find((user) => user.username === username);
-            if (!findUser) throw new error('User not found');
-            if (findUser.password != password) throw new error('Invalid credentials');
-            done(null, findUser.id)
+            const findUser = await getUserByName(username);
+            console.log(findUser)
+            if (findUser == null) throw error('No user with username ' +username);
+            if (findUser[0].password != password) throw error('Wrong password for ' +username);
+            done(null, findUser[0])
         } catch(err) {
             done(err, null);
         };
-        done(null, user)
     })
 )
-
-// const userList = await getUsers();

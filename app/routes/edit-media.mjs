@@ -7,11 +7,12 @@ import {queryDB,
   addCollabBD} from '../../database/db.mjs';
 import logger from "./../logger.mjs";
 import multer from 'multer';
+import isLogged from './../middleware/checkauth.mjs'
 const upload = multer();
 
 const router = express.Router();
 
-router.get('/editor/media/', async (request, response) => {
+router.get('/editor/media/', isLogged, async (request, response) => {
     const qData = await getMediaList();
     const webPageData = {'rows': qData.rows};
 //    webPageData['person_name'] = await getPersonName(name_uri);

@@ -3,7 +3,7 @@ import indexRouter from './main.mjs'
 import youtubeRouter from './youtube.mjs'
 import personasRouter from './personas.mjs'
 import editMediaRouter from './edit-media.mjs'
-import authRouter from './edit-media.mjs'
+import authRouter from './auth.mjs'
 
 const router = Router();
 
