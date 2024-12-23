@@ -6,6 +6,7 @@ await ignition();
 
 import logger from "./logger.mjs";
 import {queryDB, endDB} from '../database/db.mjs';
+import { log } from 'node:console';
 
 const youtubeApiKey = process.env.YOUTUBEKEY;
 
@@ -18,11 +19,14 @@ function youtubeUrlParser(url) {
 }
 
 // get the list of videos from base (uri's)
-async function getYoutubeStatUriListDB() {
+async function getYoutubeStatUriListDB(offset, limit) {
     const query = {
         text: `SELECT media_sources.id, media_sources.web_link
         FROM media_sources
-        WHERE paywall_id = 1;`
+        WHERE paywall_id = 1
+        OFFSET $1
+        LIMIT $2;`,
+        values: [offset, limit]
     }
     const res = await queryDB(query);
     return res;
@@ -40,7 +44,6 @@ function createUrl(videoUrl) {
 
 async function getVideoStats(videoUri) {
     const videoUrl = createUrl(videoUri);
-
     const response = await fetch(videoUrl, {
         headers: {
             "Accept": "application/json"
@@ -59,14 +62,17 @@ async function getVideoListStats(videoList) {
     }
     videoUri = videoUri.slice(0, -1);
     var statsPack = await getVideoStats(videoUri);
-    console.log(statsPack);
+    if (!statsPack) {
+        logger.error('No answer from Youtube');
+        return null;
+    }
     var result = [];
     for (var c = 0; c < statsPack.length; c++){
         var media_id = videoList[c].id;
         var count = Number(statsPack[c].statistics.viewCount);
         result.push({'media_id':media_id,'views': count})
     };
-    console.log(result);
+    logger.debug('Recieved from Youtube ' + result.length + ' items.')
     return result;
 };
 // save new data to base
@@ -81,7 +87,36 @@ async function storeScanvideoUris(listOfStatistics) {
     await queryDB(query);
 }
 
+async function getYoutubeVideoCountDB() {
+    const query = {
+        text: 'SELECT COUNT(*) FROM media_sources WHERE paywall_id =1;'
+    }
+    const result = await queryDB(query);
+    return result.rows[0].count;
+}
+
+async function getYoutubeStatsByPages() {
+    const videosCount = await getYoutubeVideoCountDB();
+    const itemsOnQuery = 49;
+    const pagesCount = Math.floor(Number(videosCount)/itemsOnQuery) + 1;
+    logger.debug(pagesCount + ' pages to get stats.')
+    var fullStats = [];
+    for (var i=0; i < pagesCount; i++) {
+        var videoList = await getYoutubeStatUriListDB(i, itemsOnQuery);
+        var readyStats = await getVideoListStats(videoList.rows);
+        fullStats.push(...readyStats);
+    }
+    console.log(...fullStats)
+    return fullStats;
+}
+
+const stats = await getYoutubeStatsByPages();
+await storeScanvideoUris(stats);
+
+
+/*
 const videoList = await getYoutubeStatUriListDB();
 const readyStats = await getVideoListStats(videoList.rows);
 await storeScanvideoUris(readyStats);
+*/
 await endDB();

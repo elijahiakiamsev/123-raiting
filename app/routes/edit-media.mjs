@@ -23,7 +23,7 @@ router.get('/editor/media/', isLogged, async (request, response) => {
     response.render('editor/media.ejs', {webPageData: webPageData});
 })
 
-router.get('/editor/media/add', async (request, response) => {
+router.get('/editor/media/add', isLogged, async (request, response) => {
   const persons = await getPersonsListDB();
   const paywalls = await getPaywallsListDB();
   const webPageData = {
@@ -33,7 +33,7 @@ router.get('/editor/media/add', async (request, response) => {
  response.render('editor/media-add.ejs', {webPageData: webPageData});
 });
 
-router.get('/editor/media/:id', async (request, response) => {
+router.get('/editor/media/:id', isLogged, async (request, response) => {
     var media = await getMediaByIDDB(request.params.id);
     var persons = await getPersonsListDB();
     var paywalls = await getPaywallsListDB();
@@ -44,27 +44,27 @@ router.get('/editor/media/:id', async (request, response) => {
     response.render('editor/media-edit.ejs', {webPageData: webPageData});
 })
 
-router.post('/editor/media/:id', upload.none(), async (request, response) => {
+router.post('/editor/media/:id', isLogged, upload.none(), async (request, response) => {
   var dataToUpdate = await prepareMediaToStore(request.body, Number(request.params.id));
   await updateMediaInStore(dataToUpdate, Number(request.params.id));
   var webPageData = dataToUpdate;
  response.render('editor/media-posted.ejs', {webPageData: webPageData});
 });
 
-router.post('/editor/media/', upload.none(), async (request, response) => {
+router.post('/editor/media/', isLogged, upload.none(), async (request, response) => {
     var dataToStore = await prepareMediaToStore(request.body);
     await saveMediaToStore(dataToStore);
     var webPageData = dataToStore;
     response.render('editor/media-posted.ejs', {webPageData: webPageData});
 });
 
-/*
- router.get('/editor/media/:id/delete', upload.none(), async (request, response) => {
+
+ router.get('/editor/media/:id/delete', isLogged, upload.none(), async (request, response) => {
   const id = request.params.id;
   await deleteMedia(id);
  response.redirect('/editor/media/');
 });
-*/
+
 async function deleteMedia(id) {
   const query = {
     text: `DELETE FROM media_sources WHERE media_id = ${id};
