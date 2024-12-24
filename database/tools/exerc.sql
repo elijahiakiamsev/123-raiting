@@ -1,41 +1,16 @@
-
-SELECT 
-    v.media_source_id, 
-    ms.release_date,
-    v.scan_date, 
-    v.views_count,
-    CASE
-        WHEN ms.release_date > (v.scan_date - INTERVAL '1 day')
-        THEN v.views_count
-        ELSE v.views_count - ps.views_count
-    END 
-    AS delta,
-    ps.scan_date AS previous_scan_date,
-    ps.views_count AS previous_scan_views_count
--- INTO last_scan_data
-FROM (SELECT 
-    media_source_id, 
-    scan_date, 
-    views_count,
-    ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num
-    FROM views
-    ) v
-JOIN (
-    SELECT
-    id,
-    release_date,
-    1 AS row_to_keep
-    FROM media_sources
-) ms
-ON v.row_num = ms.row_to_keep AND v.media_source_id = ms.id
-LEFT JOIN (
-    SELECT 
-    media_source_id,
-    scan_date,
-    views_count,
-    ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num1
-    FROM views
-    WHERE views.scan_date <= (SELECT max((scan_date) - INTERVAL '1 day') FROM views)
-) ps
-ON ps.media_source_id = v.media_source_id
-AND ps.row_num1 = 1;
+SELECT
+    p.person_name,
+    SUM(l.delta) as big_delta
+FROM persons p
+LEFT JOIN collaborators c
+ON p.id = c.person_id
+AND c.role_id = 1
+JOIN media m
+ON c.media_id = m.id
+JOIN media_sources ms
+ON m.id = ms.media_id
+JOIN last_scan_data l
+ON ms.id = l.media_source_id
+GROUP BY person_name
+ORDER BY big_delta DESC
+;

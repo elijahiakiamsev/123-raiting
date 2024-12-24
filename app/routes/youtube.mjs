@@ -52,6 +52,38 @@ async function getYoutubeTrendingNowFromDB() {
   return result;
 }
 
+async function getYoutubeTrendingComediansFromDB() {
+  const query = {
+      text: `SELECT
+    p.person_name,
+    SUM(l.delta) as big_delta
+FROM persons p
+LEFT JOIN collaborators c
+ON p.id = c.person_id
+AND c.role_id = 1
+JOIN media m
+ON c.media_id = m.id
+JOIN media_sources ms
+ON m.id = ms.media_id
+JOIN last_scan_data l
+ON ms.id = l.media_source_id
+GROUP BY person_name
+ORDER BY big_delta DESC
+              LIMIT 20;`
+  } 
+  const result = await queryDB(query);
+  return result;
+}
+
+async function getYoutubeTrendingComedians() {
+  const result = await getYoutubeTrendingComediansFromDB();
+  if (!result) {
+    logger.error('Validation: the delivered result is empty.');
+    return false;
+  };
+  return result.rows;
+};
+
 async function getYoutybeScanDate() {
   const dataFromDB = await getYoutybeScanDateDB();
   const result = dataFromDB.rows[0].max;
@@ -89,7 +121,7 @@ async function getYoutubeTrendingNow() {
 router.get('/youtube/', async (request, response) => {
     var webPageData = {};
     const youtubeRaiting = await getYoutubeRaiting();
-    const lastScanDate = await getYoutybeScanDate()
+    const lastScanDate = await getYoutybeScanDate();
     webPageData = {
       'lastScanDate': lastScanDate,
       'youtubeRaiting': youtubeRaiting
@@ -105,10 +137,12 @@ router.get('/youtube/', async (request, response) => {
 router.get('/youtube/now', async (request, response) => {
   var webPageData = {};
   const youtubeTrend = await getYoutubeTrendingNow();
+  const comedianTrend= await getYoutubeTrendingComedians()
   const lastScanDate = await getYoutybeScanDate()
   webPageData = {
     'lastScanDate': lastScanDate,
-    'youtubeRaiting': youtubeTrend
+    'youtubeRaiting': youtubeTrend,
+    'comedianTrend': comedianTrend
   }
   if (!webPageData || webPageData == {}) {
     response.status(404).send('404 - no that page');

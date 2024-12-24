@@ -1,7 +1,8 @@
 <%- include('common/header'); %>
-<% const raiting = webPageData.youtubeRaiting
-   const dateOptions = {
-dateStyle: 'full',
+<% const raiting = webPageData.youtubeRaiting;
+    const comedians = webPageData.comedianTrend;
+    const dateOptions = {
+    dateStyle: 'full',
     timeStyle: 'short',
     hourCycle: 'h23',
     timeZone: 'Europe/Moscow'}%>
@@ -30,6 +31,24 @@ dateStyle: 'full',
         <%= raiting[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
         <% } else { %>-<% } %>
         </td>
+</tr>
+    <% } %>
+</table>
+<h2>Комики в тренде</h2>
+<p>Чьи концерты смотрели за сутки</p>
+<table>
+<tr>
+    <th></th>
+    <th>Комик</th>
+    <th>+ за сутки</th>
+</tr>
+<% for (i=0; i < comedians.length; i++) { %>
+<tr>
+    <td><%= i+1 %></td>
+    <td><%= comedians[i].person_name %></td>
+    <td style="text-align:right">
+        <%= comedians[i].big_delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
+    </td>
 </tr>
     <% } %>
 </table>
