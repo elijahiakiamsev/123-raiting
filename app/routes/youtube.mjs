@@ -6,17 +6,10 @@ const router = Router();
 
 async function getYoutubeRaitingFromDB() {
   const query = {
-      text: `SELECT media_id, views_count, title, web_link, person_name
+      text: `SELECT media_id, views_count, title, web_link, person_name, delta
               FROM media_sources 
-              JOIN (
-                  SELECT 
-                  media_source_id, 
-                  scan_date, 
-                  views_count,
-                  ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num
-                  FROM views
-                  ) RankedMedia
-              ON RankedMedia.media_source_id = media_sources.id AND RankedMedia.row_num = 1
+              JOIN last_scan_data
+              ON last_scan_data.media_source_id = media_sources.id
               JOIN media
               ON media_sources.media_id = media.id
               JOIN

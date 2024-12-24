@@ -18,6 +18,7 @@ dateStyle: 'full',
     <th>Концерт</th>
     <th>Комик</th>
     <th>Просмотры</th>
+    <th>+ за сутки</th>
 </tr>
 <% for (i=0; i < raiting.length; i++) { %>
 <tr>
@@ -25,6 +26,7 @@ dateStyle: 'full',
     <td><a href="<%= raiting[i].web_link %>"><%= raiting[i].title %></a></td>
     <td><%= raiting[i].person_name %></td>
     <td style="text-align:right"><%= raiting[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
+    <td style="text-align:right"><%= raiting[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
 </tr>
     <% } %>
 </table>
