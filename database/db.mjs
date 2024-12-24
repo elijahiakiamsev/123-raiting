@@ -53,7 +53,7 @@ export async function queryDB(query) {
         logger.debug('queryDB response recieved, example: ' + JSON.stringify(res.rows[0]));
         return res;
      } catch (err) {
-        logger.error(err);
+        logger.error('queryDB error: '+ err);
      }
 };
 
