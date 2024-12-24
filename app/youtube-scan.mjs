@@ -6,7 +6,6 @@ await ignition();
 
 import logger from "./logger.mjs";
 import {queryDB, endDB} from '../database/db.mjs';
-import { log } from 'node:console';
 
 const youtubeApiKey = process.env.YOUTUBEKEY;
 
@@ -145,7 +144,8 @@ LEFT JOIN (
 ) ps
 ON ps.media_source_id = v.media_source_id
 AND ps.row_num1 = 1;`
-    }
+    };
+    console.log(query);
     const result = await queryDB(query);
     return result;
 }
@@ -160,4 +160,4 @@ const videoList = await getYoutubeStatUriListDB();
 const readyStats = await getVideoListStats(videoList.rows);
 await storeScanvideoUris(readyStats);
 */
-await endDB();
+// await endDB();

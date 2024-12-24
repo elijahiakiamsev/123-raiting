@@ -1,37 +1,19 @@
 
-DROP TABLE last_scan_data;
-SELECT 
-    v.media_source_id, 
-    v.scan_date, 
-    v.views_count,
-    v.views_count - ps.views_count AS delta,
-    ps.scan_date AS previous_scan_date,
-    ps.views_count AS previous_scan_views_count
-INTO last_scan_data
-FROM (SELECT 
-    media_source_id, 
-    scan_date, 
-    views_count,
-    ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num
-    FROM views
-    ) v
-JOIN (
-    SELECT
-    id,
-    1 AS row_to_keep
-    FROM media_sources
-) ms
-ON v.row_num = ms.row_to_keep AND v.media_source_id = ms.id
-LEFT JOIN (
-    SELECT 
-    media_source_id,
-    scan_date,
-    views_count,
-    ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num1
-    FROM views
-    WHERE views.scan_date <= (SELECT max((scan_date) - INTERVAL '1 day') FROM views)
-) ps
-ON ps.media_source_id = v.media_source_id
-AND ps.row_num1 = 1;
-SELECT * FROM last_scan_data
-;
+SELECT media_id, views_count, title, web_link, person_name, delta
+              FROM media_sources 
+              JOIN last_scan_data l
+              ON l.media_source_id = media_sources.id
+              AND l.delta > 0
+              JOIN media
+              ON media_sources.media_id = media.id
+              JOIN
+                  (
+                  SELECT media_id as m_id, person_id
+                  FROM collaborators
+                  WHERE collaborators.role_id = 1
+                  ) AS comedians
+              ON comedians.m_id = media_id
+              JOIN persons
+              ON persons.id = person_id
+              ORDER BY delta DESC
+              LIMIT 20;
