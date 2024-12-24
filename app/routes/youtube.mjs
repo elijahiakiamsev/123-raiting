@@ -67,9 +67,11 @@ JOIN media_sources ms
 ON m.id = ms.media_id
 JOIN last_scan_data l
 ON ms.id = l.media_source_id
+WHERE l.delta > 0
 GROUP BY person_name
 ORDER BY big_delta DESC
-              LIMIT 20;`
+LIMIT 20
+;`
   } 
   const result = await queryDB(query);
   return result;
