@@ -156,8 +156,8 @@ AND ps.row_num1 = 1;`
     return result;
 }
 
-// const stats = await getYoutubeStatsByPages();
-// await storeScanvideoUris(stats);
+const stats = await getYoutubeStatsByPages();
+await storeScanvideoUris(stats);
 await recalculateDeltas()
 
 
