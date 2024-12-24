@@ -113,9 +113,17 @@ async function recalculateDeltas() {
         text: `DROP TABLE last_scan_data;
 SELECT 
     v.media_source_id, 
+    ms.release_date,
     v.scan_date, 
     v.views_count,
-    v.views_count - ps.views_count AS delta,
+    CASE
+        WHEN ms.release_date
+        BETWEEN (v.scan_date - INTERVAL '1 day')
+        AND v.scan_date
+        THEN v.views_count
+        ELSE v.views_count - ps.views_count
+    END 
+    AS delta,
     ps.scan_date AS previous_scan_date,
     ps.views_count AS previous_scan_views_count
 INTO last_scan_data
@@ -129,6 +137,7 @@ FROM (SELECT
 JOIN (
     SELECT
     id,
+    release_date,
     1 AS row_to_keep
     FROM media_sources
 ) ms
@@ -145,7 +154,6 @@ LEFT JOIN (
 ON ps.media_source_id = v.media_source_id
 AND ps.row_num1 = 1;`
     };
-    console.log(query);
     const result = await queryDB(query);
     return result;
 }
