@@ -117,9 +117,7 @@ SELECT
     v.scan_date, 
     v.views_count,
     CASE
-        WHEN ms.release_date
-        BETWEEN (v.scan_date - INTERVAL '1 day')
-        AND v.scan_date
+        WHEN ms.release_date > (v.scan_date - INTERVAL '1 day')
         THEN v.views_count
         ELSE v.views_count - ps.views_count
     END 
@@ -158,8 +156,8 @@ AND ps.row_num1 = 1;`
     return result;
 }
 
-const stats = await getYoutubeStatsByPages();
-await storeScanvideoUris(stats);
+// const stats = await getYoutubeStatsByPages();
+// await storeScanvideoUris(stats);
 await recalculateDeltas()
 
 

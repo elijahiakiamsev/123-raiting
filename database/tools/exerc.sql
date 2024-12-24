@@ -5,16 +5,14 @@ SELECT
     v.scan_date, 
     v.views_count,
     CASE
-        WHEN ms.release_date
-        BETWEEN (v.scan_date - INTERVAL '1 day')
-        AND v.scan_date
+        WHEN ms.release_date > (v.scan_date - INTERVAL '1 day')
         THEN v.views_count
         ELSE v.views_count - ps.views_count
     END 
     AS delta,
     ps.scan_date AS previous_scan_date,
     ps.views_count AS previous_scan_views_count
-INTO last_scan_data
+-- INTO last_scan_data
 FROM (SELECT 
     media_source_id, 
     scan_date, 
