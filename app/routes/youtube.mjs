@@ -35,7 +35,7 @@ async function getYoutybeScanDate() {
 
 async function getYoutybeScanDateDB() {
   const query = {
-    text:'SELECT max(scan_date) FROM views;'
+    text:'SELECT max(scan_date) FROM last_scan_data;'
   }
   const result = await queryDB(query);
   return result;

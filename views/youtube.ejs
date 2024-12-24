@@ -26,7 +26,11 @@ dateStyle: 'full',
     <td><a href="<%= raiting[i].web_link %>"><%= raiting[i].title %></a></td>
     <td><%= raiting[i].person_name %></td>
     <td style="text-align:right"><%= raiting[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
-    <td style="text-align:right"><%= raiting[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
+    <td style="text-align:right">
+        <% if (raiting[i].delta) { %>
+        <%= raiting[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
+        <% } else { %>-<% } %>
+        </td>
 </tr>
     <% } %>
 </table>
