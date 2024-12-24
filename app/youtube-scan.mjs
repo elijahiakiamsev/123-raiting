@@ -112,17 +112,13 @@ async function getYoutubeStatsByPages() {
 async function recalculateDeltas() {
     const query = {
         text: `DROP TABLE last_scan_data;
-WITH max_scan_date AS (
-    SELECT max(scan_date) AS max
-    FROM views
-)
 SELECT 
-    views1.media_source_id, 
-    views1.scan_date, 
-    views1.views_count,
-    views1.views_count - PreviousScan.views_count AS delta,
-    PreviousScan.scan_date AS previous_scan_date,
-    PreviousScan.views_count AS previous_scan_views_count
+    v.media_source_id, 
+    v.scan_date, 
+    v.views_count,
+    v.views_count - ps.views_count AS delta,
+    ps.scan_date AS previous_scan_date,
+    ps.views_count AS previous_scan_views_count
 INTO last_scan_data
 FROM (SELECT 
     media_source_id, 
@@ -130,8 +126,15 @@ FROM (SELECT
     views_count,
     ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num
     FROM views
-    ) views1
+    ) v
 JOIN (
+    SELECT
+    id,
+    1 AS row_to_keep
+    FROM media_sources
+) ms
+ON v.row_num = ms.row_to_keep AND v.media_source_id = ms.id
+LEFT JOIN (
     SELECT 
     media_source_id,
     scan_date,
@@ -139,9 +142,9 @@ JOIN (
     ROW_NUMBER() OVER (PARTITION BY media_source_id ORDER BY scan_date DESC) AS row_num1
     FROM views
     WHERE views.scan_date <= (SELECT max((scan_date) - INTERVAL '1 day') FROM views)
-) PreviousScan
-ON PreviousScan.media_source_id = views1.media_source_id
-WHERE views1.row_num = 1 AND PreviousScan.row_num1 = 1;`
+) ps
+ON ps.media_source_id = v.media_source_id
+AND ps.row_num1 = 1;`
     }
     const result = await queryDB(query);
     return result;
