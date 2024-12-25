@@ -1,0 +1,38 @@
+<%- include('common/header'); %>
+<%  const trend = webPageData.youtubeTrend;
+    const dateOptions = {
+    dateStyle: 'full',
+    timeStyle: 'short',
+    hourCycle: 'h23',
+    timeZone: 'Europe/Moscow'}%>
+
+<h1>Youtube просмотры за сутки</h1>
+<p>Рейтинг обновляется примерно раз в день.
+    Последнее обновление:
+    <%= webPageData.lastScanDate.toLocaleString("ru-RU", dateOptions) %>
+    по Москве.</p>
+<p><a href="/">На главную</a> / <a href="/youtube/">Youtube</a></p>
+<table>
+<tr>
+    <th></th>
+    <th>Концерт</th>
+    <th>Комик</th>
+    <th>Просмотры</th>
+    <th>+ за сутки</th>
+</tr>
+<% for (i=0; i < trend.length; i++) { %>
+<tr>
+    <td><%= i+1 %></td>
+    <td><a href="<%= trend[i].web_link %>"><%= trend[i].title %></a></td>
+    <td><%= trend[i].person_name %></td>
+    <td style="text-align:right"><%= trend[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
+    <td style="text-align:right">
+        <% if (trend[i].delta) { %>
+        <%= trend[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
+        <% } else { %>-<% } %>
+        </td>
+</tr>
+    <% } %>
+</table>
+<p>Собраны работы длиной более сорока минут. С некоторыми исключениями.</p>
+<%- include('common/footer'); %>

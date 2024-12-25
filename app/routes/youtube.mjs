@@ -31,7 +31,9 @@ async function getYoutubeRaitingFromDB(limit) {
   return result;
 }
 
-async function getYoutubeTrendingNowFromDB() {
+async function getYoutubeTrendingNowFromDB(limit) {
+  var limit_expression = '';
+  !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
       text: `SELECT media_id, views_count, title, web_link, person_name, delta
               FROM media_sources 
@@ -50,13 +52,16 @@ async function getYoutubeTrendingNowFromDB() {
               JOIN persons
               ON persons.id = person_id
               ORDER BY delta DESC
-              LIMIT 20;`
+              ${limit_expression}
+              ;`
   } 
   const result = await queryDB(query);
   return result;
 }
 
-async function getYoutubeTrendingComediansFromDB() {
+async function getYoutubeTrendingComediansFromDB(limit) {
+  var limit_expression = '';
+  !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
       text: `SELECT
 p.person_name,
@@ -74,15 +79,15 @@ ON ms.id = l.media_source_id
 WHERE l.delta > 0
 GROUP BY person_name
 ORDER BY big_delta DESC
-LIMIT 20
+${limit_expression}
 ;`
   } 
   const result = await queryDB(query);
   return result;
 }
 
-async function getYoutubeTrendingComedians() {
-  const result = await getYoutubeTrendingComediansFromDB();
+async function getYoutubeTrendingComedians(limit) {
+  const result = await getYoutubeTrendingComediansFromDB(limit);
   if (!result) {
     logger.error('Validation: the delivered result is empty.');
     return false;
@@ -114,8 +119,8 @@ async function getYoutubeRaiting(limit) {
   return result.rows;
 };
 
-async function getYoutubeTrendingNow() {
-  const result = await getYoutubeTrendingNowFromDB();
+async function getYoutubeTrendingNow(limit) {
+  const result = await getYoutubeTrendingNowFromDB(limit);
   if (!result) {
     logger.error('Validation: the delivered result is empty.');
     return false;
@@ -140,12 +145,27 @@ router.get('/youtube/full/', async (request, response) => {
     logger.debug('Youtube raiting delivered');
     response.render('youtube-now.ejs', {webPageData: webPageData});
 })
+router.get('/youtube/concerts/today/', async (request, response) => {
+  var webPageData = {};
+  const youtubeTrend = await getYoutubeTrendingNow();
+  const lastScanDate = await getYoutybeScanDate();
+  webPageData = {
+    'lastScanDate': lastScanDate,
+    'youtubeTrend': youtubeTrend
+  }
+  if (!webPageData || webPageData == {}) {
+    response.status(404).send('404 - no that page');
+    return;
+  }
+  logger.debug('Youtube raiting delivered');
+  response.render('youtube-concerts-today.ejs', {webPageData: webPageData});
+})
 
 router.get('/youtube/', async (request, response) => {
   var webPageData = {};
   const youtubeRaiting = await getYoutubeRaiting(20)
-  const youtubeTrend = await getYoutubeTrendingNow();
-  const comedianTrend= await getYoutubeTrendingComedians()
+  const youtubeTrend = await getYoutubeTrendingNow(20);
+  const comedianTrend= await getYoutubeTrendingComedians(20)
   const lastScanDate = await getYoutybeScanDate()
   webPageData = {
     'youtubeRaiting': youtubeRaiting,
