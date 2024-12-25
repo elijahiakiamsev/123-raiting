@@ -145,6 +145,7 @@ router.get('/youtube/full/', async (request, response) => {
     logger.debug('Youtube raiting delivered');
     response.render('youtube-now.ejs', {webPageData: webPageData});
 })
+
 router.get('/youtube/concerts/today/', async (request, response) => {
   var webPageData = {};
   const youtubeTrend = await getYoutubeTrendingNow();
@@ -159,6 +160,22 @@ router.get('/youtube/concerts/today/', async (request, response) => {
   }
   logger.debug('Youtube raiting delivered');
   response.render('youtube-concerts-today.ejs', {webPageData: webPageData});
+})
+
+router.get('/youtube/comedians/today/', async (request, response) => {
+  var webPageData = {};
+  const comedianTrend= await getYoutubeTrendingComedians()
+  const lastScanDate = await getYoutybeScanDate()
+  webPageData = {
+    'lastScanDate': lastScanDate,
+    'comedianTrend': comedianTrend
+  }
+  if (!webPageData || webPageData == {}) {
+    response.status(404).send('404 - no that page');
+    return;
+  }
+  logger.debug('Youtube raiting delivered');
+  response.render('youtube-comedians-today.ejs', {webPageData: webPageData});
 })
 
 router.get('/youtube/', async (request, response) => {
