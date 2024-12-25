@@ -25,7 +25,7 @@
 <% for (i=0; i < raiting.length; i++) { %>
 <tr>
     <td><%= i+1 %></td>
-    <td><a href="<%= raiting[i].web_link %>"><%= raiting[i].title %></a></td>
+    <td><a href="<%= raiting[i].web_link %>"><%= raiting[i].title %></a> (<%= raiting[i].year %>)</td>
     <td><%= raiting[i].person_name %></td>
     <td style="text-align:right"><%= raiting[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
     <td style="text-align:right">

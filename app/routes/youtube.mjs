@@ -8,7 +8,14 @@ async function getYoutubeRaitingFromDB(limit) {
   var limit_expression = '';
   !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
-      text: `SELECT media_id, views_count, title, web_link, person_name, delta
+      text: `SELECT 
+              media_id,
+              views_count,
+              title,
+              extract(year from media_sources.release_date) AS year,
+              web_link,
+              person_name,
+              delta
               FROM media_sources 
               JOIN last_scan_data
               ON last_scan_data.media_source_id = media_sources.id
@@ -35,7 +42,8 @@ async function getYoutubeTrendingNowFromDB(limit) {
   var limit_expression = '';
   !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
-      text: `SELECT media_id, views_count, title, web_link, person_name, delta
+      text: `SELECT media_id, views_count, title, web_link, person_name, delta,
+              extract(year from media_sources.release_date) AS year
               FROM media_sources 
               JOIN last_scan_data l
               ON l.media_source_id = media_sources.id
