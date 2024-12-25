@@ -4,7 +4,9 @@ import logger from "./../logger.mjs";
 
 const router = Router();
 
-async function getYoutubeRaitingFromDB() {
+async function getYoutubeRaitingFromDB(limit) {
+  var limit_expression = '';
+  !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
       text: `SELECT media_id, views_count, title, web_link, person_name, delta
               FROM media_sources 
@@ -21,7 +23,9 @@ async function getYoutubeRaitingFromDB() {
               ON comedians.m_id = media_id
               JOIN persons
               ON persons.id = person_id
-              ORDER BY views_count DESC;`
+              ORDER BY views_count DESC
+              ${limit_expression}
+              ;`
   } 
   const result = await queryDB(query);
   return result;
@@ -55,8 +59,8 @@ async function getYoutubeTrendingNowFromDB() {
 async function getYoutubeTrendingComediansFromDB() {
   const query = {
       text: `SELECT
-    p.person_name,
-    SUM(l.delta) as big_delta
+p.person_name,
+SUM(l.delta) as big_delta
 FROM persons p
 LEFT JOIN collaborators c
 ON p.id = c.person_id
@@ -101,8 +105,8 @@ async function getYoutybeScanDateDB() {
 };
 
 
-async function getYoutubeRaiting() {
-  const result = await getYoutubeRaitingFromDB();
+async function getYoutubeRaiting(limit) {
+  const result = await getYoutubeRaitingFromDB(limit);
   if (!result) {
     logger.error('Validation: the delivered result is empty.');
     return false;
@@ -119,8 +123,9 @@ async function getYoutubeTrendingNow() {
   return result.rows;
 };
 
+// routes
 
-router.get('/youtube/', async (request, response) => {
+router.get('/youtube/full/', async (request, response) => {
     var webPageData = {};
     const youtubeRaiting = await getYoutubeRaiting();
     const lastScanDate = await getYoutybeScanDate();
@@ -133,17 +138,19 @@ router.get('/youtube/', async (request, response) => {
       return;
     }
     logger.debug('Youtube raiting delivered');
-    response.render('youtube.ejs', {webPageData: webPageData});
+    response.render('youtube-now.ejs', {webPageData: webPageData});
 })
 
-router.get('/youtube/now', async (request, response) => {
+router.get('/youtube/', async (request, response) => {
   var webPageData = {};
+  const youtubeRaiting = await getYoutubeRaiting(20)
   const youtubeTrend = await getYoutubeTrendingNow();
   const comedianTrend= await getYoutubeTrendingComedians()
   const lastScanDate = await getYoutybeScanDate()
   webPageData = {
+    'youtubeRaiting': youtubeRaiting,
     'lastScanDate': lastScanDate,
-    'youtubeRaiting': youtubeTrend,
+    'youtubeTrend': youtubeTrend,
     'comedianTrend': comedianTrend
   }
   if (!webPageData || webPageData == {}) {
@@ -151,7 +158,7 @@ router.get('/youtube/now', async (request, response) => {
     return;
   }
   logger.debug('Youtube raiting delivered');
-  response.render('youtube-now.ejs', {webPageData: webPageData});
+  response.render('youtube.ejs', {webPageData: webPageData});
 })
 
 export default router;

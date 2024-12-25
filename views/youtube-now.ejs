@@ -1,17 +1,17 @@
 <%- include('common/header'); %>
-<% const raiting = webPageData.youtubeRaiting;
-    const comedians = webPageData.comedianTrend;
-    const dateOptions = {
-    dateStyle: 'full',
+<% const raiting = webPageData.youtubeRaiting
+   const dateOptions = {
+dateStyle: 'full',
     timeStyle: 'short',
     hourCycle: 'h23',
     timeZone: 'Europe/Moscow'}%>
 
-<h1>Youtube тренд за сутки</h1>
-<p>Рейтинг обновляется примерно раз в день. Последнее обновление:
+<h1>Youtube рейтинг</h1>
+<p>Рейтинг обновляется примерно раз в день.
+    Последнее обновление:
     <%= webPageData.lastScanDate.toLocaleString("ru-RU", dateOptions) %>
-    по Москве. Считаются ровно сутки с последнего обновления. Показаны 20 концертов.</p>
-<p><a href="/">На главную</a></p>
+    по Москве.</p>
+<p><a href="/">На главную</a> / <a href="/youtube/">Youtube</a></p>
 <table>
 <tr>
     <th></th>
@@ -31,24 +31,6 @@
         <%= raiting[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
         <% } else { %>-<% } %>
         </td>
-</tr>
-    <% } %>
-</table>
-<h2>Комики в тренде</h2>
-<p>Чьи концерты смотрели за сутки</p>
-<table>
-<tr>
-    <th></th>
-    <th>Комик</th>
-    <th>+ за сутки</th>
-</tr>
-<% for (i=0; i < comedians.length; i++) { %>
-<tr>
-    <td><%= i+1 %></td>
-    <td><%= comedians[i].person_name %></td>
-    <td style="text-align:right">
-        <%= comedians[i].big_delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
-    </td>
 </tr>
     <% } %>
 </table>
