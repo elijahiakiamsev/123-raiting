@@ -49,7 +49,7 @@
 <% for (i=0; i < trend.length; i++) { %>
 <tr>
     <td><%= i+1 %></td>
-    <td><a href="<%= trend[i].web_link %>"><%= trend[i].title %></a> <small>/<%= raiting[i].year %></small></td>
+    <td><a href="<%= trend[i].web_link %>"><%= trend[i].title %></a> <small>/<%= trend[i].year %></small></td>
     <td><%= trend[i].person_name %></td>
     <td style="text-align:right"><%= trend[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
     <td style="text-align:right">
