@@ -24,7 +24,6 @@ async function ignition(envPath) {
       }, {
         scheduled: false
       });
-    youtubeScan.start();
 }
 
 export default ignition;
