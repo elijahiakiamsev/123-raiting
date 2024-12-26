@@ -4,23 +4,25 @@ import logger from "./../logger.mjs";
 
 const router = Router();
 
-async function getYoutubeRaitingFromDB(limit) {
+async function getYoutubeRaitingFromDB(limit, year) {
   var limit_expression = '';
-  !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
+  var year_expression = '';
+  (!limit || limit == null) ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
+  (!year || year == null) ? year_expression = '' : year_expression = `AND extract(year from ms.release_date) = ${year}`;
   const query = {
       text: `SELECT 
               media_id,
               views_count,
               title,
-              extract(year from media_sources.release_date) AS year,
+              extract(year from ms.release_date) AS year,
               web_link,
               person_name,
               delta
-              FROM media_sources 
+              FROM media_sources ms
               JOIN last_scan_data
-              ON last_scan_data.media_source_id = media_sources.id
+              ON last_scan_data.media_source_id = ms.id
               JOIN media
-              ON media_sources.media_id = media.id
+              ON ms.media_id = media.id
               JOIN
                   (
                   SELECT media_id as m_id, person_id
@@ -30,6 +32,7 @@ async function getYoutubeRaitingFromDB(limit) {
               ON comedians.m_id = media_id
               JOIN persons
               ON persons.id = person_id
+              ${year_expression}
               ORDER BY views_count DESC
               ${limit_expression}
               ;`
@@ -40,7 +43,7 @@ async function getYoutubeRaitingFromDB(limit) {
 
 async function getYoutubeTrendingNowFromDB(limit) {
   var limit_expression = '';
-  !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
+  (!limit || limit == null) ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
       text: `SELECT media_id, views_count, title, web_link, person_name, delta,
               extract(year from media_sources.release_date) AS year
@@ -61,6 +64,24 @@ async function getYoutubeTrendingNowFromDB(limit) {
               ON persons.id = person_id
               ORDER BY delta DESC
               ${limit_expression}
+              ;`
+  } 
+  const result = await queryDB(query);
+  return result;
+}
+
+async function getYoutubeConcertsByYearsFromDB(year) {
+  var year_expression = '';
+  !year ? year_expression = '' : year_expression = `AND year = ${year}`;
+  const query = {
+      text: `SELECT
+extract(year from ms.release_date) AS year
+, COUNT(*) AS count
+FROM media_sources ms
+WHERE paywall_id = 1
+${year_expression}
+GROUP BY year
+ORDER BY year DESC
               ;`
   } 
   const result = await queryDB(query);
@@ -118,8 +139,8 @@ async function getYoutybeScanDateDB() {
 };
 
 
-async function getYoutubeRaiting(limit) {
-  const result = await getYoutubeRaitingFromDB(limit);
+async function getYoutubeRaiting(limit, year) {
+  const result = await getYoutubeRaitingFromDB(limit, year);
   if (!result) {
     logger.error('Validation: the delivered result is empty.');
     return false;
@@ -135,6 +156,16 @@ async function getYoutubeTrendingNow(limit) {
   };
   return result.rows;
 };
+
+async function getYoutubeConcertsByYears(year) {
+  const result = await getYoutubeConcertsByYearsFromDB(year);
+  if (!result) {
+    logger.error('Validation: the delivered result is empty.');
+    return false;
+  };
+  return result.rows;
+};
+
 
 // routes
 
@@ -152,6 +183,24 @@ router.get('/youtube/full/', async (request, response) => {
     }
     logger.debug('Youtube raiting delivered');
     response.render('youtube-now.ejs', {webPageData: webPageData});
+})
+
+router.get('/youtube/full/:year/', async (request, response) => {
+  const year = request.params.year;
+  const youtubeRaiting = await getYoutubeRaiting(null, year);
+  const lastScanDate = await getYoutybeScanDate();
+  const webPageData = {
+    'year' : year,
+    'lastScanDate': lastScanDate,
+    'youtubeRaiting': youtubeRaiting
+  }
+  console.log(webPageData)
+  if (!webPageData || webPageData == {}) {
+    response.status(404).send('404 - no that page');
+    return;
+  }
+  logger.debug('Youtube raiting delivered');
+  response.render('youtube-now.ejs', {webPageData: webPageData});
 })
 
 router.get('/youtube/concerts/today/', async (request, response) => {
@@ -188,11 +237,13 @@ router.get('/youtube/comedians/today/', async (request, response) => {
 
 router.get('/youtube/', async (request, response) => {
   var webPageData = {};
-  const youtubeRaiting = await getYoutubeRaiting(20)
+  const concertsByYears = await getYoutubeConcertsByYears();
+  const youtubeRaiting = await getYoutubeRaiting(20);
   const youtubeTrend = await getYoutubeTrendingNow(20);
   const comedianTrend= await getYoutubeTrendingComedians(20)
   const lastScanDate = await getYoutybeScanDate()
   webPageData = {
+    'concertsByYears' : concertsByYears,
     'youtubeRaiting': youtubeRaiting,
     'lastScanDate': lastScanDate,
     'youtubeTrend': youtubeTrend,

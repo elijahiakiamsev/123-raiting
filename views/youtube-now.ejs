@@ -1,12 +1,12 @@
 <%- include('common/header'); %>
 <% const raiting = webPageData.youtubeRaiting
    const dateOptions = {
-dateStyle: 'full',
+    dateStyle: 'full',
     timeStyle: 'short',
     hourCycle: 'h23',
     timeZone: 'Europe/Moscow'}%>
 
-<h1>Youtube рейтинг</h1>
+<h1>Youtube рейтинг<% if (webPageData.year) { %> концертов <%=webPageData.year%> года выхода<% }; %></h1>
 <p>Рейтинг обновляется примерно раз в день.
     Последнее обновление:
     <%= webPageData.lastScanDate.toLocaleString("ru-RU", dateOptions) %>

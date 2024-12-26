@@ -2,6 +2,7 @@
 <%  const trend = webPageData.youtubeTrend;
     const raiting = webPageData.youtubeRaiting;
     const comedians = webPageData.comedianTrend;
+    const cByYears = webPageData.concertsByYears;
     const dateOptions = {
     dateStyle: 'full',
     timeStyle: 'short',
@@ -14,6 +15,7 @@
     по Москве. Считаются ровно сутки с последнего обновления.</p>
 <p><a href="/">На главную</a></p>
 <h2>Всего просмотров</h2>
+<p><a href="full/">За всё время</a><% for (var i=0; i < cByYears.length; i++) { %>, <a href="/youtube/full/<%=cByYears[i].year%>/"><%=cByYears[i].year%></a><small>/<%=cByYears[i].count%></small><% } %>.
 <table>
 <tr>
     <th></th>
@@ -36,7 +38,7 @@
 </tr>
     <% } %>
 </table>
-<p><a href="full/">Рейтинг концертов полностью</a></p>
+<p></p>
 <h2>Просмотры за сутки</h2>
 <table>
 <tr>

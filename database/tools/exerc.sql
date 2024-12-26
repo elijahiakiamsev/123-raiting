@@ -1,17 +1,25 @@
-SELECT
-    p.person_name,
-    SUM(l.delta) as big_delta
-FROM persons p
-LEFT JOIN collaborators c
-ON p.id = c.person_id
-AND c.role_id = 1
-JOIN media m
-ON c.media_id = m.id
-JOIN media_sources ms
-ON m.id = ms.media_id
-JOIN last_scan_data l
-ON ms.id = l.media_source_id
-WHERE l.delta > 0
-GROUP BY person_name
-ORDER BY big_delta DESC
-;
+SELECT 
+              media_id,
+              views_count,
+              title,
+              extract(year from media_sources.release_date) AS year,
+              web_link,
+              person_name,
+              delta
+              FROM media_sources ms
+              JOIN last_scan_data
+              ON last_scan_data.media_source_id = ms.id
+              JOIN media
+              ON ms.media_id = media.id
+              JOIN
+                  (
+                  SELECT media_id as m_id, person_id
+                  FROM collaborators
+                  WHERE collaborators.role_id = 1
+                  ) AS comedians
+              ON comedians.m_id = media_id
+              JOIN persons
+              ON persons.id = person_id
+              AND extract(year from ms.release_date) = 2024
+              ORDER BY views_count DESC
+              ;
