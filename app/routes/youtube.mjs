@@ -187,6 +187,9 @@ router.get('/youtube/full/', async (request, response) => {
 
 router.get('/youtube/full/:year/', async (request, response) => {
   const year = request.params.year;
+  if(!year.match("^[0-9]{4}$")){
+    response.status(404).send('404 - no that page');
+  }
   const youtubeRaiting = await getYoutubeRaiting(null, year);
   const lastScanDate = await getYoutybeScanDate();
   const webPageData = {
@@ -194,7 +197,6 @@ router.get('/youtube/full/:year/', async (request, response) => {
     'lastScanDate': lastScanDate,
     'youtubeRaiting': youtubeRaiting
   }
-  console.log(webPageData)
   if (!webPageData || webPageData == {}) {
     response.status(404).send('404 - no that page');
     return;

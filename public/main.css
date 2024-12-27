@@ -4,3 +4,7 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+
+th {
+  text-align: left;
+}
