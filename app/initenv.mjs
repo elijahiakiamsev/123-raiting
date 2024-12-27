@@ -16,14 +16,6 @@ async function ignition(envPath) {
     });
     await connectDB();
     await testDB();
-    const youtubeScanScript = process.env.PATHTOYSCAN;
-    logger.debug('path to youtube scan: '+youtubeScanScript);
-    const youtubeScan = cron.schedule('0 0/4 * * *', () =>  {
-        logger.info('Starting Youtube Scan by Cron at ' + Date.now())
-        shell.exec('node ' + youtubeScanScript);
-      }, {
-        scheduled: false
-      });
 }
 
 export default ignition;

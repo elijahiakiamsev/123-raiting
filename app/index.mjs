@@ -18,6 +18,7 @@ const COOKIESECRET = process.env.COOKIESECRET;
 const app = express();
 const pgPool = getDB();
 logger.info('App Started. Hello!');
+app.use(express.static('public'))
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({limit: '5000mb', extended: true, parameterLimit: 100000000000}));
