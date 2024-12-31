@@ -8,3 +8,14 @@ body {
 th {
   text-align: left;
 }
+
+td {
+  font-family: "Roboto", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+td.statnumbers {
+  text-align: right;
+}
