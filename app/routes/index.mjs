@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import indexRouter from './main.mjs'
 import youtubeRouter from './youtube.mjs'
+import youtubeScanRouter from './youtubescan.mjs'
 import personasRouter from './personas.mjs'
 import editMediaRouter from './edit-media.mjs'
 import editPersonsRouter from './edit-persons.mjs'
@@ -10,6 +11,7 @@ const router = Router();
 
 router.use(indexRouter);
 router.use(youtubeRouter);
+router.use(youtubeScanRouter);
 router.use(personasRouter);
 router.use(editMediaRouter);
 router.use(editPersonsRouter);
