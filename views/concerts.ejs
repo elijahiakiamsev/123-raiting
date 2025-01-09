@@ -1,0 +1,16 @@
+<%- include('common/header'); %>
+<h1>Концерты</h1>
+<table>
+<tr>
+    <th>Концерт</th>
+    <th>Комик</th>
+</tr>
+<% for (var myCounter=0; myCounter < webPageData.rows.length; myCounter++) { %>
+<%  var myRow = webPageData.rows[myCounter] %>
+<tr>
+    <td><a href="/c/<%= myRow.uri %>/"><%= myRow.title %></a></td>
+    <td><%= myRow.person_name %></td>
+</tr>
+    <% } %>
+</table>
+<%- include('common/footer'); %>
