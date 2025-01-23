@@ -1,14 +1,14 @@
 <%- include('common/header'); %>
 <h1>Личный рейтинг</h1>
 <p>Так Илья Якямсев видит стендап.</p>
-
 <% for (myCounter=10; myCounter > 0; myCounter--) { %>
 <h2><%= myCounter %></h2>
 <%  if (webPageData[myCounter]) {    %>
 <ul>
 <%      for (var concert in webPageData[myCounter]) {%>
     <li>
-<%= webPageData[myCounter][concert].title %>
+<a href="<%= webPageData[myCounter][concert].web_link %>"><%= webPageData[myCounter][concert].title %></a> <small>/ <%= webPageData[myCounter][concert].person_name %>,
+    <%= webPageData[myCounter][concert].release_year%></small> 
     </li>
 
 <%      }%>    
