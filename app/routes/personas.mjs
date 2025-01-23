@@ -46,7 +46,7 @@ async function getPersonalRaitingDB(person_uri) {
         JOIN media m
         ON m.id = r.media_id
         JOIN media_sources ms
-        ON ms.id = m.id
+        ON ms.media_id = m.id
         JOIN collaborators c
         ON m.id = c.media_id AND c.role_id = 1
         JOIN persons p1

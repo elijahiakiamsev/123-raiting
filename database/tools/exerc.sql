@@ -10,4 +10,5 @@ SELECT r.media_raiting, m.uri, m.title, ms.web_link, extract(year from ms.releas
         ON m.id = c.media_id AND c.role_id = 1
         JOIN persons p1
         ON c.person_id = p1.id
-        ORDER BY r.media_raiting DESC, m.title ASC;
+        ORDER BY r.media_raiting DESC, m.title ASC
+        LIMIT 1;
