@@ -4,6 +4,7 @@ import youtubeRouter from './youtube.mjs'
 import youtubeScanRouter from './youtubescan.mjs'
 import personasRouter from './personas.mjs'
 import concertsRouter from './concerts.mjs'
+import editorRouter from './editor.mjs'
 import editMediaRouter from './edit-media.mjs'
 import editPersonsRouter from './edit-persons.mjs'
 import authRouter from './auth.mjs'
@@ -15,6 +16,7 @@ router.use(youtubeRouter);
 router.use(youtubeScanRouter);
 router.use(personasRouter);
 router.use(concertsRouter);
+router.use(editorRouter);
 router.use(editMediaRouter);
 router.use(editPersonsRouter);
 router.use(authRouter);
