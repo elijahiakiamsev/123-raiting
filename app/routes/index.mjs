@@ -7,6 +7,7 @@ import concertsRouter from './concerts.mjs'
 import editorRouter from './editor.mjs'
 import editMediaRouter from './edit-media.mjs'
 import editPersonsRouter from './edit-persons.mjs'
+import editPaywallsRouter from './edit-paywalls.mjs'
 import authRouter from './auth.mjs'
 
 const router = Router();
@@ -19,6 +20,7 @@ router.use(concertsRouter);
 router.use(editorRouter);
 router.use(editMediaRouter);
 router.use(editPersonsRouter);
+router.use(editPaywallsRouter);
 router.use(authRouter);
 
 export default router;

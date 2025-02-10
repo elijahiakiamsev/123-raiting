@@ -1,0 +1,11 @@
+<%- include('common/header'); %>
+<h1><%= webPageData.title %></h1>
+<a href ="/editor/paywalls/">На страницу с пейволлами.</a>
+<% if (webPageData.internalMessage) { %>
+<p class="<%='internalMessage-'+webPageData.internalMessage.type%>"><%= webPageData.internalMessage.text %></p>
+<% } %>
+<% if (webPageData.showJSON == true ) { %>
+    <pre><%= JSON.stringify(webPageData, null, ' ') %></pre>
+<% } %>
+<pre><%= JSON.stringify(webPageData.paywallData, null, ' ') %></pre>
+<%- include('common/footer'); %>

@@ -46,7 +46,7 @@ export async function endDB() {
 export async function queryDB(query) {
     if (!query) {
         logger.error('No query for database')
-        return;
+        return null;
     };
     try {
         const res = await db.query(query);
@@ -54,6 +54,7 @@ export async function queryDB(query) {
         return res;
      } catch (err) {
         logger.error('queryDB error: '+ err);
+        return null;
      }
 };
 
@@ -81,7 +82,7 @@ export async function getPaywallsListDB() {
     return result;
 }
 
-//Single queries
+// Single queries
 
 export async function getMediaByIDDB(id) {
     if (!id) {

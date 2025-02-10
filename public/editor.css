@@ -1,0 +1,10 @@
+/* editor messages */
+.internalMessage-info {
+  display: block;
+  border: 1px solid blue;
+  padding: 10px;
+}
+
+.internalMessage-info::before {
+  content: "✔️ ";
+}

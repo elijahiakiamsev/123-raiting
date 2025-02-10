@@ -1,9 +1,6 @@
 import path from 'node:path';
 import dotenv from 'dotenv';
-import cron from 'node-cron';
-import shell from 'shelljs';
 import {connectDB, testDB} from "../database/db.mjs";
-import logger from './logger.mjs';
 
 async function ignition(envPath) {
     if (!envPath) {

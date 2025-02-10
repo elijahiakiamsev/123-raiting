@@ -1,0 +1,31 @@
+<%- include('common/header'); %>
+<h1><%= webPageData.title %></h1>
+<% if (webPageData.internalMessage) { %>
+    <p class="<%=webPageData.internalMessage.type%>"><%= webPageData.internalMessage.text %></p>
+<% } %>
+<% if (webPageData.showJSON == true ) { %>
+<pre><%= JSON.stringify(webPageData, null, ' ') %></pre>
+<% } %>
+<p><a href="add/">+ Добавить пейволл</a></p>
+<table>
+<tr>
+    <th>id</th>
+    <th>Пейволл</th>
+    <th>uri</th>
+    <th>Удалить</th>
+</tr>
+<% for (var myCounter=0; myCounter < webPageData.paywalls.length; myCounter++) { %>
+<%  var myPaywall = webPageData.paywalls[myCounter] %>
+<tr>
+    <td><%= myPaywall.id %></td>
+    <td><a href="/editor/paywalls/<%= myPaywall.id %>/">
+        <%= myPaywall.title %></a></td>
+    <td><%= 'https://'+myPaywall.uri %></td>
+    <td><form action="/editor/paywalls/<%=myPaywall.id%>/delete/" method="delete" enctype="multipart/form-data">
+        <button type="submit" value="Submit">Удалить</button>
+    </form></td>
+</tr>
+    <% } %>
+</table>
+
+<%- include('common/footer'); %>

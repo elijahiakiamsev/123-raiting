@@ -58,8 +58,7 @@ router.post('/editor/media/', isLogged, upload.none(), async (request, response)
     response.render('editor/media-posted.ejs', {webPageData: webPageData});
 });
 
-
- router.get('/editor/media/:id/delete', isLogged, upload.none(), async (request, response) => {
+router.get('/editor/media/:id/delete', isLogged, upload.none(), async (request, response) => {
   const id = request.params.id;
   await deleteMedia(id);
  response.redirect('/editor/media/');
