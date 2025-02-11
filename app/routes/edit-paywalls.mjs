@@ -46,6 +46,32 @@ router.post('/editor/paywalls/', isLogged, upload.none(), async (request, respon
   response.render('editor/paywall-posted.ejs', {webPageData: webPageData});
 });
 
+router.get('/editor/paywalls/:id', isLogged, async (request, response) => {
+  var paywall = await getPaywallByID(request.params.id);
+  var webPageData = {
+    title : "Редактирование пейволла " + paywall.title,
+    internalMessage: null,
+    showJSON: false,
+    paywall: paywall
+    };
+  response.render('editor/paywall-edit.ejs', {webPageData: webPageData});
+})
+
+router.post('/editor/paywalls/:id', isLogged, upload.none(), async (request, response) => {
+  const dataToStore = await preparePaywallToStore(request.body, Number(request.params.id));
+  var paywall = await storePaywallByID(dataToStore, request.params.id);
+  var webPageData = {
+    title : "Редактирование пейволла " + paywall.title,
+    internalMessage: {
+      text: `Пейволл изменён: ${paywall.id} - ${paywall.title} - ${paywall.uri}`,
+      type: "info"
+    },
+    showJSON: false,
+    paywall: paywall
+    };
+  response.render('editor/paywall-edit.ejs', {webPageData: webPageData});
+})
+
 router.get('/editor/paywalls/:id/delete', isLogged, upload.none(), async (request, response) => {
   const id = request.params.id;
   await deletePaywall(id);
@@ -82,12 +108,39 @@ async function storePaywall(paywallToStore) {
   return result.rows[0];
 };
 
+async function storePaywallByID(paywallToStore, id) {
+  logger.debug("storePaywallByID input: "+JSON.stringify(paywallToStore))
+  const p = paywallToStore;
+  const title = p.paywall;
+  const uri = p.uri;
+  const queryStore = {
+    text: `UPDATE paywalls
+    SET title = $1, uri = $2
+    WHERE id = $3
+    RETURNING *;`,
+    values: [title, uri, id]
+  }
+  const result = await queryDB(queryStore);
+  logger.debug("storePaywallByID result: "+JSON.stringify(result.rows[0]))
+  return result.rows[0];
+};
+
 async function deletePaywall(id) {
   const query = {
     text: `UPDATE media_sources SET paywall_id = 0 WHERE paywall_id = ${id};
     DELETE FROM paywalls WHERE id = ${id} RETURNING *;`,
   }
-  await queryDB(query); 
-}
+  await queryDB(query);  
+};
+
+async function getPaywallByID(id) {
+  const query = {
+    text: `SELECT * FROM paywalls WHERE id =$1;`,
+    values: [id]
+  };
+  const result = await queryDB(query);
+  logger.debug('getPaywallByID: Result ' + JSON.stringify(result.rows[0]));
+  return result.rows[0];
+};
 
 export default router;

@@ -1,0 +1,18 @@
+<%- include('common/header'); %>
+<h1><%= webPageData.title %></h1>
+<% if (webPageData.internalMessage) { %>
+    <p class="<%='internalMessage-'+webPageData.internalMessage.type%>"><%= webPageData.internalMessage.text %></p>
+<% } %>
+<% if (webPageData.showJSON == true ) { %>
+    <pre><%= JSON.stringify(webPageData, null, ' ') %></pre>
+<% } %>
+<a href ="/editor/paywalls/">На страницу с пейволлами.</a> 
+<form action="/editor/paywalls/<%=webPageData.paywall.id%>/" method="post" enctype="multipart/form-data">
+    <label for="title">Paywall</label><br>
+    <input type="text" id="paywall" name="paywall" value="<%=webPageData.paywall.title%>"/><br>
+    <label for="uri">Uri</label><br>
+    <input type="text" name="uri" value="<%=webPageData.paywall.uri%>"/><br>
+    <br><br>
+    <button type="submit" value="Submit">Submit</button>
+</form>
+<%- include('common/footer'); %>

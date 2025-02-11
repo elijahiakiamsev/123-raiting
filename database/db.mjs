@@ -50,7 +50,7 @@ export async function queryDB(query) {
     };
     try {
         const res = await db.query(query);
-        logger.debug('queryDB response recieved, example: ' + JSON.stringify(res.rows[0]));
+//        logger.debug('queryDB response recieved, example: ' + JSON.stringify(res.rows[0]));
         return res;
      } catch (err) {
         logger.error('queryDB error: '+ err);
