@@ -1,0 +1,9 @@
+<%- include('common/header'); %>
+<h1><%= webPageData.title ? webPageData.title : "Here should be a title" %></h1>
+<% if (webPageData.internalMessage) { %>
+    <p class="<%=webPageData.internalMessage.type%>"><%= webPageData.internalMessage.text %></p>
+<% } %>
+<% if (webPageData.showJSON == true ) { %>
+<pre><%= JSON.stringify(webPageData, null, ' ') %></pre>
+<% } %>
+<%- include('common/footer'); %>
