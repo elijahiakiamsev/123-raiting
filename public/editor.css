@@ -8,3 +8,11 @@
 .internalMessage-info::before {
   content: "✔️ ";
 }
+
+.internalMessage-error {
+  display: block;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+}

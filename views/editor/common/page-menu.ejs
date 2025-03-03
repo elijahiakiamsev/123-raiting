@@ -1,0 +1,9 @@
+<% if (webPageData.pageMenu) { 
+    const pmenu = webPageData.pageMenu; %>
+<!-- Navigation sources arrived -->
+<ul>
+<%  for (var i = 0; i < pmenu.length; i++) { %>
+    <li><a href="<%= pmenu[i].itemUrl %>"><%= pmenu[i].itemName %></a></li>
+<% } %>
+</ul>
+<% } %>

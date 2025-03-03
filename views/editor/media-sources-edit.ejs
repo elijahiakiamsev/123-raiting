@@ -1,9 +1,45 @@
 <%- include('common/header'); %>
-<h1><%= webPageData.title ? webPageData.title : "Here should be a title" %></h1>
-<% if (webPageData.internalMessage) { %>
-    <p class="<%=webPageData.internalMessage.type%>"><%= webPageData.internalMessage.text %></p>
+
+<% 
+const webPageDataError = {
+    internalMessage : {
+    text: "Error: web page data delivered, but empty",
+    type: "error"
+    },
+    showJSON : true};  
+(webPageData || webPageData == {}) ? webPageData : webPageDataError;
+%>
+
+<%- include('common/page-title'); %>
+<%- include('common/internal-message'); %>
+<%- include('common/page-menu'); %>
+
+<% if (webPageData.content) { %>
+<% if (webPageData.content.sourcesList) { %>
+<!-- List of media sources arrived -->
+<h2>Все медиа</h2>
+<table>
+<tr>
+    <th>media_id</th>
+    <th>media</th>
+    <th>id</th>
+    <th>paywall</th>
+</tr>
+<% 
+    sl = webPageData.content.sourcesList;
+    for (var i=0; i < sl.length; i++) {
+%>
+<tr>
+    <td><%= sl[i].media_id %></td>
+    <td><a href="editor/media/<%= sl[i].media_id %>/"><%= sl[i].title %></a> / <small><%= sl[i].person_name %>, <%= sl[i].release_date.getFullYear() %></small></td>
+    <td><%= sl[i].id %></td>
+    <td><a href="<%= sl[i].id %>/"><%= sl[i].paywall_title %></a></td>
+</tr>
+<%
+    }
+%>
+</table>
 <% } %>
-<% if (webPageData.showJSON == true ) { %>
-<pre><%= JSON.stringify(webPageData, null, ' ') %></pre>
-<% } %>
+<% } else { %><p>No content</p><% }; %>
+<%- include('common/json-visible'); %>
 <%- include('common/footer'); %>
