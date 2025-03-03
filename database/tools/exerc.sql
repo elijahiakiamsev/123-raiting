@@ -17,4 +17,5 @@ JOIN collaborators c
 ON ms.media_id = c.media_id
 AND c.role_id = 1
 JOIN persons ps
-ON c.person_id = ps.id;
+ON c.person_id = ps.id
+ORDER BY ms.media_id;
