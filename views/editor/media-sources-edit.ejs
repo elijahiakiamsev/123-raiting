@@ -31,7 +31,7 @@ const webPageDataError = {
 %>
 <tr>
     <td><%= sl[i].media_id %></td>
-    <td><a href="editor/media/<%= sl[i].media_id %>/"><%= sl[i].title %></a> / <small><%= sl[i].person_name %>, <%= sl[i].release_date.getFullYear() %></small></td>
+    <td><a href="/editor/media/<%= sl[i].media_id %>/"><%= sl[i].title %></a> / <small><%= sl[i].person_name %>, <%= sl[i].release_date.getFullYear() %></small></td>
     <td><%= sl[i].id %></td>
     <td><a href="<%= sl[i].id %>/"><%= sl[i].paywall_title %></a></td>
 </tr>

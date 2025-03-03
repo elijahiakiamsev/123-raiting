@@ -9,7 +9,8 @@ const upload = multer();
 const router = express.Router();
 
 router.get('/editor/media-sources/', isLogged, async (request, response) => {
-    response.render('editor/media-sources-edit.ejs', {webPageData: await prepareIndexPageData()});
+    response.render('editor/media-sources-edit.ejs', 
+      {webPageData: await prepareIndexPageData()});
 })
 
 async function prepareIndexPageData() {
