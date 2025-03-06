@@ -1,0 +1,37 @@
+<form action="<%=frm.action%>" method="<%=frm.method%>" enctype="<%=frm.enctype%>">
+<% for (var i=0; i < frm.fields.length; i++) {
+    var field = frm.fields[i];
+    switch (field.type) {
+
+        case "text": %>
+<label for="<%=field.fieldName%>" ><%=field.title%></label><br>
+<input type="text" id="<%=field.fieldName%>" name="<%=field.fieldName%>" value="<%=field.value%>"/><br><br>            
+           <% break;
+
+        case "select": %>
+<label for="<%=field.fieldName%>" ><%=field.title%></label><br>
+<select name="<%=field.fieldName %>">
+    <% for (var x=0; x < field.options.length ; x++) { %>
+        <% var option = field.options[x] %>
+        <option value="<%= option.value %>" <%= option.selected ? "selected" : "" %>><%= option.title %></option>
+    <% } %>
+</select><br><br>            
+       <% break; 
+
+       case "date": %>
+<label for="<%=field.fieldName%>" ><%=field.title%></label><br>
+<input type="date" name="<%=field.fieldName%>" value="<%=field.value%>"/><br><br>
+            
+       <% break; 
+
+       case "button": %>
+<button type="<%= field.type %>" value="<%= field.value %>"><%= field.title %></button>
+        <% break;
+
+       default: %>
+      <p>field type not found</p>
+      <%      break;
+    } %>
+
+<% } %>
+</form>

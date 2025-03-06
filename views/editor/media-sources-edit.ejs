@@ -15,6 +15,10 @@ const webPageDataError = {
 <%- include('common/page-menu'); %>
 
 <% if (webPageData.content) { %>
+<% if (webPageData.content.itemForm) { 
+    const currentForm = webPageData.content.itemForm; %>
+<%- include('common/form-builder', {frm: currentForm}); %>
+<% } %>
 <% if (webPageData.content.sourcesList) { %>
 <!-- List of media sources arrived -->
 <h2>Все медиа</h2>
