@@ -1,16 +1,16 @@
 <form action="<%=frm.action%>" method="<%=frm.method%>" enctype="<%=frm.enctype%>">
-<% for (var i=0; i < frm.fields.length; i++) {
-    var field = frm.fields[i];
+<% for (var f in frm.fields) {
+    var field = frm.fields[f];
     switch (field.type) {
 
         case "text": %>
-<label for="<%=field.fieldName%>" ><%=field.title%></label><br>
-<input type="text" id="<%=field.fieldName%>" name="<%=field.fieldName%>" value="<%=field.value%>"/><br><br>            
+<label for="<%=f%>" ><%=field.title%></label><br>
+<input type="text" id="<%=f%>" name="<%=f%>" value="<%=field.value%>"/><br><br>            
            <% break;
 
         case "select": %>
-<label for="<%=field.fieldName%>" ><%=field.title%></label><br>
-<select name="<%=field.fieldName %>">
+<label for="<%=f%>" ><%=field.title%></label><br>
+<select name="<%=f %>">
     <% for (var x=0; x < field.options.length ; x++) { %>
         <% var option = field.options[x] %>
         <option value="<%= option.value %>" <%= option.selected ? "selected" : "" %>><%= option.title %></option>
@@ -19,8 +19,8 @@
        <% break; 
 
        case "date": %>
-<label for="<%=field.fieldName%>" ><%=field.title%></label><br>
-<input type="date" name="<%=field.fieldName%>" value="<%=field.value%>"/><br><br>
+<label for="<%=f%>" ><%=field.title%></label><br>
+<input type="date" name="<%=f%>" value="<%=field.value.toLocaleDateString('en-CA')%>"/><br><br>
             
        <% break; 
 
@@ -29,7 +29,7 @@
         <% break;
 
        default: %>
-      <p>field type not found</p>
+      <p><%= f %>: field type is not found</p>
       <%      break;
     } %>
 

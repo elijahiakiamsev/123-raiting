@@ -48,9 +48,27 @@ async function prepareMediaSourceEditPageByID(id) {
   }
   var pageData = await prepareMediaSourceEditPage();
   const msData = await getMediaSourceByID(id);
+  // insert the media source data into the form template
   var ms = msData.rows[0];
-  pageData.title = ms.title + " - источник медиа";
+  pageData.title = ms.title + " - источник медиа, " + ms.paywall_title;
+  const fields = pageData.content.itemForm.fields;
+  pageData.content.itemForm.fields.media.options = 
+        await findSelectedByValue(ms.media_id, fields.media.options);
+  pageData.content.itemForm.fields.paywall.options =
+        await findSelectedByValue(ms.paywall_id, fields.paywall.options);
+  pageData.content.itemForm.fields.releaseDate.value = ms.release_date;
+  pageData.content.itemForm.fields.url.value = ms.web_link;  
+ 
   return pageData;
+}
+
+async function findSelectedByValue(value, fieldsList) {
+  for (var i=0; i < fieldsList.length; i++) {
+    if (fieldsList[i].value == value) {
+      fieldsList[i].selected = true;
+    };
+  }
+  return fieldsList;
 }
 
 async function getMediaSourceByID(id) {
@@ -60,8 +78,11 @@ async function getMediaSourceByID(id) {
     ms.web_link,
     ms.release_date,
     ms.paywall_id,
+    p.title as paywall_title,
     m.title
     FROM media_sources ms
+    JOIN paywalls p
+    ON p.id = ms.paywall_id
     JOIN media m
     ON m.id = ms.media_id
     WHERE ms.id = $1;`,
@@ -75,43 +96,49 @@ async function prepareMediaSourceEditPage() {
   var pageData = {};
   pageData.title = "Add mediasource";
   pageData.content = {};
-  pageData.showJSON = true;
+  pageData.showJSON = false;
+  pageData.pageMenu = [
+    {
+      itemName : "редактор",
+      itemUrl : "/editor/"
+    },
+    {
+      itemName : "источники медиа",
+      itemUrl : "/editor/media-sources/"
+    }
+  ];
   pageData.content.itemForm = {
     formName: "Media Source",
     action: "",
     method: "post",
     enctype: "multipart/form-data",
-    fields: [
-      {
+    fields: {
+      media : {
         type: "select",
-        fieldName: "media",
         title: "Media",
         options: await prepareMediaListTitles()
       },
-      {
+      url : {
         type: "text",
-        fieldName: "url",
         title: "URL",
         value: ""
       },
-      {
+      releaseDate : {
         type: "date",
-        fieldName: "releaseDate",
         value: "",
         title: "Release date"
       },
-      {
+      paywall : {
         type: "select",
-        fieldName: "paywall",
         title: "Paywall",
         options: await preparePaywallsTitles()
       },
-      {
+      submitAction : {
         type: "button",
         value: "submit",
         title: "Submit"
       }
-    ]
+    }
   };
   return pageData;
 }
@@ -122,7 +149,6 @@ async function preparePaywallsTitles() {
   for (var i=0; i < rawList.rows.length; i++) {
     result.push({value: rawList.rows[i].id, title: rawList.rows[i].title})
   };
-  console.log(JSON.stringify(result));
   return result;
 }
 
@@ -143,7 +169,6 @@ async function prepareMediaListTitles() {
   for (var i=0; i < rawList.rows.length; i++) {
     result.push({value: rawList.rows[i].id, title: rawList.rows[i].title})
   };
-  console.log(JSON.stringify(result));
   return result;
 }
 

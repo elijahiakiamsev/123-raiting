@@ -45,7 +45,6 @@ export default passport.use(
         console.log('Password:' + password);
         try {
             const findUser = await getUserByName(username);
-            console.log(findUser)
             if (findUser == null) throw error('No user with username ' +username);
             if (findUser[0].password != password) throw error('Wrong password for ' +username);
             done(null, findUser[0])
