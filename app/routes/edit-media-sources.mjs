@@ -3,6 +3,7 @@ import {queryDB} from '../../database/db.mjs';
 import multer from 'multer';
 import logger from "./../logger.mjs";
 import isLogged from './../middleware/checkauth.mjs'
+import * as wp from "./../webpage.mjs"; 
 
 const upload = multer();
 
@@ -11,15 +12,20 @@ const router = express.Router();
 router.get('/editor/media-sources/', isLogged, async (request, response) => {
     response.render('editor/media-sources-edit.ejs', 
       {webPageData: await prepareIndexPageData()});
-})
+});
+
+router.get('/editor/media-sources/:add/', isLogged, async (request, response) => {
+  response.render('editor/media-sources-edit.ejs',
+    {webPageData: await prepareMediaSourceEditPage()});
+});
 
 router.get('/editor/media-sources/:id/', isLogged, async (request, response) => {
   response.render('editor/media-sources-edit.ejs',
     {webPageData: await prepareMediaSourceEditPageByID(Number(request.params.id))});
-})
+});
 
 async function prepareIndexPageData() {
-  var pageData = await prepareCleanWebpageData();
+  var pageData = await wp.createCleanWebpage();
   const mediaSourcesList = await getFullMediaSourcesList();
   pageData.title = "Редактирование источников медиа";
   pageData.pageMenu = [
@@ -35,7 +41,7 @@ async function prepareIndexPageData() {
   pageData.content = {};
   pageData.content.sourcesList = mediaSourcesList;
   return pageData;
-}
+};
 
 async function prepareMediaSourceEditPageByID(id) {
   if (!id) {
@@ -109,7 +115,7 @@ async function prepareMediaSourceEditPage() {
   ];
   pageData.content.itemForm = {
     formName: "Media Source",
-    action: "",
+    action: "editor/media-sources/add/",
     method: "post",
     enctype: "multipart/form-data",
     fields: {
@@ -215,16 +221,5 @@ async function getfullMediaSourcesListDB () {
   const result = await queryDB(queryList);
   return result;
 }
-
-async function prepareCleanWebpageData() {
-  const webPageData = {
-    title: null,
-    internalMessage: null,
-    showJSON: false,
-    pageMenu: null,
-    content: null
-  };
-  return webPageData;
-};
 
 export default router;

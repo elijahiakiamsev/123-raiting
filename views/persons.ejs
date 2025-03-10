@@ -1,3 +1,15 @@
 <%- include('common/header'); %>
-<p>Тут будут, значит, всякие деятели</p>
+<%- include('common/page-title'); %>
+<% if (webPageData.content.persons) {
+    const p = webPageData.content.persons;
+    for (const l in p) {%>
+<h2><%=l%></h2>
+<ul>
+    <%    for (var i=0; i < p[l].length; i++) { %>
+        <li><a href="<%= p[l][i].uri %>/"><%= p[l][i].last_name %>, <%= p[l][i].first_name %></a></li>
+<%    } %>
+</ul>
+<%  } 
+   } %>
+<%- include('common/json-visible'); %>
 <%- include('common/footer'); %>

@@ -163,13 +163,13 @@ async function prepareMediaToStore(reqBody, id) {
 async function getMediaListDB() {
   const query = {
     text: `SELECT media.id, title, person_name
-FROM media
-JOIN collaborators
-ON media.id = collaborators.media_id
-AND collaborators.role_id = 1
-JOIN persons
-ON collaborators.person_id = persons.id
-ORDER BY id DESC;`
+      FROM media
+      JOIN collaborators
+      ON media.id = collaborators.media_id
+      AND collaborators.role_id = 1
+      JOIN persons
+      ON collaborators.person_id = persons.id
+      ORDER BY id DESC;`
   } 
   const res = await queryDB(query);
   return res

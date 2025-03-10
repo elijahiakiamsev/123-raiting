@@ -20,7 +20,7 @@
 
        case "date": %>
 <label for="<%=f%>" ><%=field.title%></label><br>
-<input type="date" name="<%=f%>" value="<%=field.value.toLocaleDateString('en-CA')%>"/><br><br>
+<input type="date" name="<%=f%>" value="<%= field.value ? field.value.toLocaleDateString('en-CA') : '' %>"/><br><br>
             
        <% break; 
 
