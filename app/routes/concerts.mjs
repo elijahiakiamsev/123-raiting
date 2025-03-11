@@ -33,7 +33,6 @@ async function prepareConcertPageByUri(concertUri) {
   pageData.content.collaborators = collaborators;
   pageData.title = concertInfo.title;
   pageData.concertInfo = concertInfo;
-  pageData.showJSON = true;
   return pageData;
 };
 
