@@ -1,2 +1,28 @@
-<p>Это страничка концерта. Одного.</p>
-<p><%= name_uri %></p>
+<%- include('common/header'); %>
+<%- include('common/page-title'); %>
+<% if (webPageData.content) { %>
+<% if (webPageData.content.mediaSources) {
+        const mediaSources = webPageData.content.mediaSources;
+        var ms = null; %>
+<h2>Где смотреть</h2>
+<ul>
+<% for (var i=0; i < mediaSources.length; i++) {
+    ms = mediaSources[i]; %>
+    <li><a href="<%= ms.web_link %>/"><%= ms.title %></a><small> / <%= ms.release_date.toLocaleDateString('en-CA') %></small></li>
+<% } %>
+</ul>
+<% } %>
+<% if (webPageData.content.mediaSources) {
+        const collaborators = webPageData.content.collaborators;
+        var c = null; %>
+<h2>Кто это сделал</h2>
+<ul>
+<% for (var i=0; i < collaborators.length; i++) {
+    c = collaborators[i]; %>
+    <li><a href="/p/<%= c.uri %>/"><%= c.person_name %></a> - <%= c.role_title %></li>
+<% } %>
+</ul>
+<% } %>
+<% } %>
+<%- include('common/json-visible'); %>
+<%- include('common/footer'); %>

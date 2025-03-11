@@ -12,5 +12,6 @@ export async function createCleanWebpage() {
 
 export const breadCrumbs = {
     home: {text: "😃", uri : "/"},
-    persons: {text: "люди", uri: "/p/"}
+    persons: {text: "люди", uri: "/p/"},
+    concerts: {text: "концерты", uri: "/c/"}
 };
