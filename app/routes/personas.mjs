@@ -10,13 +10,14 @@ router.get('/p/', async (request, response) => {
         {webPageData : await preparePersonsPageData()});
 });
 
-router.get('/p/:person_uri/', (request, response) => {
-    const person_uri = request.params.person_uri;
-    response.render('person.ejs', {person_uri:person_uri});
+router.get('/p/:personUri/', async (request, response) => {
+    const personUri = request.params.personUri;
+    response.render('person.ejs', 
+        {webPageData: await preparePersonPageByUri(personUri)});
 });
 
-router.get('/p/:person_uri/raiting', async (request, response) => {
-    const person_uri = request.params.person_uri;
+router.get('/p/:personUri/raiting', async (request, response) => {
+    const person_uri = request.params.personUri;
     logger.debug('*** GET Personal raiting for '+ person_uri);
     var webPageData = {};
     webPageData = await getPersonalRaiting(person_uri);
@@ -74,7 +75,53 @@ async function getPersonsListFromDB() {
     return res.rows;
 }
 
-// 
+// generating person page
+
+async function preparePersonPageByUri(personUri) {
+    var pageData = await wp.createCleanWebpage();
+    const personInfo = await getPersonInfoByUriFromDB(personUri);
+    const concertsInfo = await getConcertsByPersonFromDB(personInfo.id);
+    pageData.breadCrumbs = [
+        wp.breadCrumbs.home,
+        wp.breadCrumbs.persons
+    ];
+    pageData.content = {}
+    pageData.content.concerts = concertsInfo;
+    pageData.title = personInfo.first_name + ' ' + personInfo.last_name;
+    return pageData;
+};
+
+async function getPersonInfoByUriFromDB(personUri) {
+    const query = {
+        text: `SELECT
+        *
+        FROM persons p
+        where p.uri = $1`,
+        values: [personUri]
+    }
+    const result = await queryDB(query);
+    return result.rows[0];
+}
+
+async function getConcertsByPersonFromDB(personID) {
+    logger.debug('getConcertsByPersonFromDB: personID = ' + personID);
+    // select only concerts where the person is a comedian
+    // fix it after implementing other roles
+    const query = {
+        text: `SELECT
+        m.id,
+        m.title,
+        m.uri
+        FROM collaborators c
+        JOIN media m
+        ON c.media_id = m.id
+        AND c.role_id = 1
+        WHERE c.person_id = $1`,
+        values: [personID]
+    };
+    const result = await queryDB(query);
+    return result.rows;
+}
 
 // Personal raiting (from persons to an media)
 

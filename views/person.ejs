@@ -1,3 +1,18 @@
-<p>Это страничка человека. Одного.</p>
-<p><%= name_uri %></p>
+<%- include('common/header'); %>
+<%- include('common/page-title'); %>
+<% if (webPageData.content) { %>
+<% if (webPageData.content.concerts) {
+    const concerts = webPageData.content.concerts;
+    var c = null; %>
+<h2>Концерты</h2>
+<ul>
+<% for (var i=0; i < concerts.length; i++) {
+    c = concerts[i]; %>
+    <li><a href="/c/<%= c.uri %>/"><%= c.title %></a></li>
+<% } %>
+</ul>
+<% } %>
+<% } %>
 <p><a href='raiting/'>Личный рейтинг</a></p>
+<%- include('common/json-visible'); %>
+<%- include('common/footer'); %>
