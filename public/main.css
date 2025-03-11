@@ -19,3 +19,8 @@ td {
 td.statnumbers {
   text-align: right;
 }
+
+h1 .breadCrumbs {
+  font-size: 40%;
+  font-weight: bold;
+}

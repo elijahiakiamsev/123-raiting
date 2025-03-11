@@ -35,6 +35,9 @@ async function preparePersonsPageData() {
     var pageData = await wp.createCleanWebpage();
     pageData.title = "Люди";
     pageData.showJSON = false;
+    pageData.breadCrumbs = [
+        wp.breadCrumbs.home,
+    ]
     pageData.content = {
         persons : await preparePersonsList(),
     }
@@ -44,7 +47,7 @@ async function preparePersonsPageData() {
 async function preparePersonsList() {
     const rawList = await getPersonsListFromDB();
     var result = {};
-    // group object by first name letter
+    // group object by the first name letter
     for (var i=0; i < rawList.length; i++) {
         if (!result[rawList[i].name_letter]) result[rawList[i].name_letter] = [];
         result[rawList[i].name_letter].push({
@@ -70,6 +73,10 @@ async function getPersonsListFromDB() {
     const res = await queryDB(query);
     return res.rows;
 }
+
+// 
+
+// Personal raiting (from persons to an media)
 
 async function getPersonalRaitingDB(person_uri) {
     if (person_uri == '') {

@@ -1,1 +1,11 @@
-<h1><%= webPageData.title ? webPageData.title : "Here should be a title" %></h1>
+<h1><% if (webPageData.breadCrumbs) { %>
+    <small class="breadCrumbs">
+    <% for (var i=0; i < webPageData.breadCrumbs.length; i++) { %>
+    <a href="<%= webPageData.breadCrumbs[i].uri %>"><%= webPageData.breadCrumbs[i].text %></a> /
+    <%   } %>
+</small>
+    <% } %>
+    <%= webPageData.title ? webPageData.title : "Here should be a title" %>
+
+            
+</h1>
