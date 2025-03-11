@@ -116,7 +116,8 @@ async function getConcertsByPersonFromDB(personID) {
         JOIN media m
         ON c.media_id = m.id
         AND c.role_id = 1
-        WHERE c.person_id = $1`,
+        WHERE c.person_id = $1
+        ORDER BY m.title`,
         values: [personID]
     };
     const result = await queryDB(query);

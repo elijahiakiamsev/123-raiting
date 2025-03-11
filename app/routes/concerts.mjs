@@ -32,7 +32,6 @@ async function prepareConcertPageByUri(concertUri) {
   pageData.content.mediaSources = mediaSourcesInfo;
   pageData.content.collaborators = collaborators;
   pageData.title = concertInfo.title;
-  pageData.concertInfo = concertInfo;
   return pageData;
 };
 
