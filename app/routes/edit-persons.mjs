@@ -8,40 +8,26 @@ import {queryDB,
 import logger from "./../logger.mjs";
 import multer from 'multer';
 import isLogged from './../middleware/checkauth.mjs'
+
+import * as Page from "./../renders/edit-persons-render.mjs"
+
 const upload = multer();
 
 const router = express.Router();
 
 router.get('/editor/persons/', isLogged, async (request, response) => {
-    const qData = await getPersonsListDB();
-    const webPageData = {'rows': qData.rows};
-//    webPageData['person_name'] = await getPersonName(name_uri);
-    if (!webPageData || webPageData == {}) {
-      response.status(404).send('404 - no that page');
-      return;
-    }
-    response.render('editor/persons.ejs', {webPageData: webPageData});
+    response.render('editor/persons.ejs',
+      {webPageData: await Page.preparePersonsList()});
 })
 
 router.get('/editor/persons/add', isLogged, async (request, response) => {
-  const persons = await getPersonsListDB();
-  const webPageData = {
-    "persons": persons.rows,
-  };
- response.render('editor/person-add.ejs', {webPageData: webPageData});
+    response.render('editor/person.ejs', 
+      {webPageData: Page.preparePersonAdd()});
 });
 
 router.get('/editor/persons/:id', isLogged, async (request, response) => {
-    const id = Number(request.params.id);
-    var person = await getPersonDB(id);
-    var paywalls = await getPaywallsListDB()
-    var collab = await getCollabFullDataDB(id);
-    var webPageData = { "person": person.rows[0], 
-                        "paywalls": paywalls.rows,
-                        "collab": collab ? collab.rows : null
-                      };
-    console.log(webPageData);
-    response.render('editor/person-edit.ejs', {webPageData: webPageData});
+    response.render('editor/person.ejs', 
+      {webPageData: await Page.preparePersonEdit(Number(request.params.id))});
 })
 
 router.post('/editor/persons/:id', isLogged, upload.none(), async (request, response) => {
@@ -57,7 +43,6 @@ router.post('/editor/persons/', isLogged, upload.none(), async (request, respons
     var webPageData = dataToStore;
     response.render('editor/person-posted.ejs', {webPageData: webPageData});
 });
-
 
  router.get('/editor/persons/:id/delete', isLogged, upload.none(), async (request, response) => {
   const id = request.params.id;

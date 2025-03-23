@@ -73,13 +73,13 @@ export async function testDB() {
 
 // Direct queries for mass queries
 export async function getPersonsListDB() {
-    const result = queryDB('SELECT * FROM persons;');
-    return result;
+    const result = await queryDB('SELECT * FROM persons;');
+    return result.rows;
 };
 
 export async function getPaywallsListDB() {
-    const result = queryDB('SELECT * FROM paywalls;');
-    return result;
+    const result = await queryDB('SELECT * FROM paywalls;');
+    return result.rows;
 }
 
 // Single queries
@@ -95,18 +95,18 @@ export async function getMediaByIDDB(id) {
     };
     var query = {
         text: `SELECT m.id, m.title, m.uri as uri, media_sources.id as source_id,
-web_link, media_sources.release_date, collaborators.person_id as person_id,
-collaborators.role_id as role_id, person_name
-FROM ( SELECT * FROM media WHERE media.id = $1) as m
-LEFT JOIN media_sources
-ON m.id = media_sources.media_id
-LEFT JOIN collaborators
-ON m.id = collaborators.media_id
-LEFT JOIN persons
-ON collaborators.person_id = persons.id
-LEFT JOIN roles
-ON collaborators.role_id = roles.id
-WHERE role_id = 1;`,
+        web_link, media_sources.release_date, collaborators.person_id as person_id,
+        collaborators.role_id as role_id, person_name
+        FROM ( SELECT * FROM media WHERE media.id = $1) as m
+        LEFT JOIN media_sources
+        ON m.id = media_sources.media_id
+        LEFT JOIN collaborators
+        ON m.id = collaborators.media_id
+        LEFT JOIN persons
+        ON collaborators.person_id = persons.id
+        LEFT JOIN roles
+        ON collaborators.role_id = roles.id
+        WHERE role_id = 1;`,
         values: [id]
     }
     const result = await queryDB(query);

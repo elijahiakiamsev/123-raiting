@@ -1,0 +1,9 @@
+<%- include('common/header'); %>
+<%- include('./../common/page-title.ejs'); %>
+<%- include('common/internal-message'); %>
+<%- include('common/page-menu'); %>
+<% if (webPageData.content) { %>
+
+<% } else { %><p>No content recieved</p><% }; %>
+<%- include('./../common/json-visible'); %>
+<%- include('common/footer'); %>

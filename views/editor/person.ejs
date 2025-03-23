@@ -1,0 +1,8 @@
+<% wp = webPageData; %>
+<%- include('common/header', {webPageData: wp}); %>
+<% if (wp.content) { %>
+    <% if (wp.content.personForm) { %>
+    <%- include('common/form-builder', {frm: wp.content.personForm}); %>
+    <% }; %>
+<% } else { %><p>No content recieved</p><% }; %>
+<%- include('common/footer', {webPageData: wp}); %>

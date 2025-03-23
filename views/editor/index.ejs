@@ -1,5 +1,8 @@
-<%- include('common/header'); %>
-<h1>Editor</h1>
+<% 
+var wp = {};
+wp.title = 'Editor';
+%>
+<%- include('common/header', {webPageData : wp}); %>
 <h2>Content</h2>
 <ul>
     <li>🎬 <a href="/editor/media/">Медиа</a> (<a href="/editor/media/add/">+ добавить</a>)</li>
@@ -11,4 +14,4 @@
 <ul>
     <li>📺 <a href="/editor/youtubescan/">Дёрнуть ютюб</a></li>
 </ul>
-<%- include('common/footer'); %>
+<%- include('common/footer', {webPageData : wp}); %>

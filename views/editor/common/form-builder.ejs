@@ -28,8 +28,12 @@
 <button type="<%= field.type %>" value="<%= field.value %>"><%= field.title %></button>
         <% break;
 
+        case "hidden": %>
+<hidden name="<%= f %>" value="<%= field.value %>"></button>
+        <% break;
+
        default: %>
-      <p><%= f %>: field type is not found</p>
+      <p><%= f %>: field type "<%= field.type %>" is not found</p>
       <%      break;
     } %>
 

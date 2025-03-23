@@ -1,23 +1,24 @@
+<% wp = webPageData; %>
 <%- include('common/header'); %>
-<h1>Персоны</h1>
-<p><a href="add/">+ Добавить персону</a></p>
+<% if (wp.content) { %>
+<% persons = wp.content.persons; %>
 <table>
-<tr>
-    <th>id</th>
-    <th>Персона</th>
-    <th>Удалить</th>
-</tr>
-<% for (var myCounter=0; myCounter < webPageData.rows.length; myCounter++) { %>
-<%  var myRow = webPageData.rows[myCounter] %>
-<tr>
-    <td><%= myRow.id %></td>
-    <td><a href="/editor/persons/<%= myRow.id %>/">
-        <%= myRow.person_name %></a></td>
-    <td><form action="/editor/persons/<%=myRow.id%>/delete/" method="delete" enctype="multipart/form-data">
-        <button type="submit" value="Submit">Удалить</button>
-    </form></td>
-</tr>
-    <% } %>
+    <tr>
+        <th>id</th>
+        <th>Персона</th>
+        <th>Удалить</th>
+    </tr>
+    <% for (var i = 0; i < persons.length; i++) { %>
+    <% var person = persons[i]; %>
+    <tr>
+        <td><%= person.id %></td>
+        <td><a href="/editor/persons/<%= person.id %>/">
+            <%= person.last_name %> <%= person.first_name %></a></td>
+        <td><form action="/editor/persons/<%=person.id%>/delete/" method="delete" enctype="multipart/form-data">
+            <button type="submit" value="Submit">Удалить</button>
+        </form></td>
+    </tr>
+            <% } %>
 </table>
-
+<% } else { %><p>No content recieved</p><% }; %>
 <%- include('common/footer'); %>

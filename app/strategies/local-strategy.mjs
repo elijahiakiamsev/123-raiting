@@ -41,8 +41,6 @@ passport.deserializeUser(async (idhash, done) => {
 
 export default passport.use(
     new Strategy(async (username, password, done) => {
-        console.log('Username:' + username);
-        console.log('Password:' + password);
         try {
             const findUser = await getUserByName(username);
             if (findUser == null) throw error('No user with username ' +username);

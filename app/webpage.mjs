@@ -1,5 +1,4 @@
-export async function createCleanWebpage() {
-    const pageData = {
+export const CleanWebpage = {
         title: null, // title for the page, string
         internalMessage: null, // 
         showJSON: false, // shows the full JSON for the page (usualy on the bottom of the page), boolean
@@ -7,11 +6,11 @@ export async function createCleanWebpage() {
         breadCrumbs : null, // backward navigation, [{text: string, uri: string}]
         content: null // content, sum of anything
     };
-    return pageData;
-};
 
 export const breadCrumbs = {
     home: {text: "😃", uri : "/"},
     persons: {text: "люди", uri: "/p/"},
-    concerts: {text: "концерты", uri: "/c/"}
+    concerts: {text: "концерты", uri: "/c/"},
+    editor: {text: "редактор", uri: "/editor/"},
+    editorPersons: {text: "персоны", uri: "/editor/persons/"}
 };

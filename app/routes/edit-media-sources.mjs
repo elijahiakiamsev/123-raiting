@@ -25,7 +25,7 @@ router.get('/editor/media-sources/:id/', isLogged, async (request, response) => 
 });
 
 async function prepareIndexPageData() {
-  var pageData = await wp.createCleanWebpage();
+  var pageData = wp.CleanWebpage;
   const mediaSourcesList = await getFullMediaSourcesList();
   pageData.title = "Редактирование источников медиа";
   pageData.pageMenu = [

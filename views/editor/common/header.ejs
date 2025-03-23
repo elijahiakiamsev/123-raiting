@@ -4,4 +4,8 @@
     <link rel="stylesheet" href="/editor.css">
 </head>
 <body>
+<% wp = webPageData; %>
+<%- include('../../common/page-title.ejs', {webPageData: wp}); %>
+<%- include('internal-message', {webPageData: wp}); %>
+<%- include('page-menu', {webPageData: wp}); %>
 <!-- stop header -->

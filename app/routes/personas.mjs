@@ -22,18 +22,13 @@ router.get('/p/:personUri/raiting', async (request, response) => {
     var webPageData = {};
     webPageData = await getPersonalRaiting(person_uri);
 //    webPageData['person_name'] = await getPersonName(name_uri);
-    if (!webPageData) {
-        logger.error('Validation: the delivered result is empty.');
-        response.status(404).send('404 - no that page');
-        return
-    }
     response.render('person_raiting.ejs', {webPageData: webPageData});
 });
 
 // Generating the persons page
 
 async function preparePersonsPageData() {
-    var pageData = await wp.createCleanWebpage();
+    var pageData = wp.CleanWebpage;
     pageData.title = "Люди";
     pageData.showJSON = false;
     pageData.breadCrumbs = [
@@ -78,7 +73,7 @@ async function getPersonsListFromDB() {
 // generating person page
 
 async function preparePersonPageByUri(personUri) {
-    var pageData = await wp.createCleanWebpage();
+    var pageData = wp.CleanWebpage;
     const personInfo = await getPersonInfoByUriFromDB(personUri);
     const concertsInfo = await getConcertsByPersonFromDB(personInfo.id);
     pageData.breadCrumbs = [

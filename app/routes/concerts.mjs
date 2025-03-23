@@ -20,7 +20,7 @@ router.get('/c/:concertUri/', async (request, response) => {
 // single concert page by uri
 
 async function prepareConcertPageByUri(concertUri) {
-  var pageData = await wp.createCleanWebpage();
+  var pageData = wp.CleanWebpage;
   const concertInfo = await getConcertInfoByUriFromDB(concertUri);
   const mediaSourcesInfo = await getMediaSourcesByConcertIDFromDB(concertInfo.id);
   const collaborators = await getCollaboratorsByConcertIDFromDB(concertInfo.id);

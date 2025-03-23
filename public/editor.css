@@ -16,3 +16,12 @@
   font-weight: bold;
   padding: 10px;
 }
+
+h1 .breadCrumbs {
+  font-size: 40%;
+  font-weight: bold;
+}
+
+h1 .breadCrumbs a {
+  text-decoration: none;
+}
