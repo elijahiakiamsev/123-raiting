@@ -162,7 +162,8 @@ async function prepareMediaToStore(reqBody, id) {
 
 async function getMediaListDB() {
   const query = {
-    text: `SELECT media.id, title, person_name
+    text: `SELECT media.id, title,
+      concat(first_name, ' ', last_name) AS person_name
       FROM media
       JOIN collaborators
       ON media.id = collaborators.media_id

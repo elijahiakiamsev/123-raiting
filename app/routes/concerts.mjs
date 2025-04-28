@@ -69,7 +69,7 @@ async function getCollaboratorsByConcertIDFromDB(concertID) {
   const query = {
       text: `SELECT
       r.title as role_title,
-      p.person_name,
+      concat(first_name, ' ', last_name) AS person_name,
       p.uri
       FROM media m
       JOIN collaborators c

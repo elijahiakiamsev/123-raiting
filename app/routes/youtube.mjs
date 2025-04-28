@@ -16,7 +16,7 @@ async function getYoutubeRaitingFromDB(limit, year) {
               title,
               extract(year from ms.release_date) AS year,
               web_link,
-              person_name,
+              concat(first_name, ' ', last_name) AS person_name,
               delta
               FROM media_sources ms
               JOIN last_scan_data
@@ -45,7 +45,7 @@ async function getYoutubeTrendingNowFromDB(limit) {
   var limit_expression = '';
   (!limit || limit == null) ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
-      text: `SELECT media_id, views_count, title, web_link, person_name, delta,
+      text: `SELECT media_id, views_count, title, web_link, concat(first_name, ' ', last_name) AS person_name, delta,
               extract(year from media_sources.release_date) AS year
               FROM media_sources 
               JOIN last_scan_data l
@@ -93,7 +93,7 @@ async function getYoutubeTrendingComediansFromDB(limit) {
   !limit ? limit_expression = '' : limit_expression = `LIMIT ${limit}`;
   const query = {
       text: `SELECT
-p.person_name,
+concat(first_name, ' ', last_name) AS person_name,
 SUM(l.delta) as big_delta
 FROM persons p
 LEFT JOIN collaborators c
@@ -106,7 +106,7 @@ ON m.id = ms.media_id
 JOIN last_scan_data l
 ON ms.id = l.media_source_id
 WHERE l.delta > 0
-GROUP BY person_name
+GROUP BY concat(first_name, ' ', last_name)
 ORDER BY big_delta DESC
 ${limit_expression}
 ;`

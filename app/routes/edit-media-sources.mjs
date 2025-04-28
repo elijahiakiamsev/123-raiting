@@ -204,7 +204,7 @@ async function getfullMediaSourcesListDB () {
     p.title as paywall_title,
     m.title,
     m.uri,
-    ps.person_name,
+    concat(first_name, ' ', last_name) AS person_name,
     ps.uri as person_uri
     FROM media_sources ms
     JOIN paywalls p

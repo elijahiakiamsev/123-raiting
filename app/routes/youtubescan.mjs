@@ -159,7 +159,7 @@ router.get('/editor/youtubescan/', async (request, response) => {
     const stats = await getYoutubeStatsByPages();
     await storeScanvideoUris(stats);
     await recalculateDeltas();
-    response.status(200).send('This is the youtube scan');
+    response.status(200).send('This is the <a href="/youtube/">youtube</a> scan');
 })
 
 export default router;
