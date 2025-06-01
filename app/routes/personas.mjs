@@ -133,7 +133,7 @@ async function getPersonalRaitingDB(person_uri) {
         m.title,
         ms.web_link,
         extract(year from ms.release_date) AS release_year,
-        concat(p.first_name, ' ', p.last_name) AS person_name
+        concat(p1.first_name, ' ', p1.last_name) AS person_name
         FROM raiting r
         JOIN persons p
         ON r.person_id = p.id AND p.uri = $1
