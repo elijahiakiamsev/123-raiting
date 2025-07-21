@@ -44,7 +44,7 @@ router.post('/editor/persons/', isLogged, upload.none(), async (request, respons
     response.render('editor/person-posted.ejs', {webPageData: webPageData});
 });
 
- router.get('/editor/persons/:id/delete', isLogged, upload.none(), async (request, response) => {
+router.get('/editor/persons/:id/delete', isLogged, upload.none(), async (request, response) => {
   const id = request.params.id;
   await deletePerson(id);
  response.redirect('/editor/persons/');
