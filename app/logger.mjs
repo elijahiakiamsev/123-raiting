@@ -5,18 +5,18 @@ let alignColorsAndTime = winston.format.combine(
       all:true
   }),
   winston.format.label({
-      label:'[LOGGER]'
+      label:'[L]'
   }),
   winston.format.timestamp({
       format:"YY-MM-DD HH:mm:ss"
   }),
   winston.format.printf(
-      info => ` ${info.label}  ${info.timestamp}  ${info.level} : ${info.message}`
+      info => `${info.label} ${info.timestamp} ${info.level}: ${info.message}`
   )
 );
 
 const logger = winston.createLogger({
-    level: 'debug',
+    level: 'info',
     format: winston.format.combine(
         winston.format.errors({stack:true}),
         alignColorsAndTime

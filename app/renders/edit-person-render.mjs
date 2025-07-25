@@ -1,26 +1,6 @@
 import * as wp from "./../webpage.mjs";
 import * as db from '../../database/db.mjs';
 
-// persons list
-
-export async function preparePersonsList() {
-    var pageData = wp.CleanWebpage;
-    pageData.breadCrumbs = [
-        wp.breadCrumbs.home,
-        wp.breadCrumbs.editor
-    ];
-    pageData.pageMenu = [
-        {
-          itemName : "добавить персону",
-          itemUrl : "add/"
-         }
-      ];
-    pageData.title = "Персоны";
-    pageData.content = {};
-    pageData.content.persons = await getPersonsListDB();
-    return pageData;
-}
-
 // prepare Edit one person page
 
 export async function preparePersonEdit(id) {
@@ -100,11 +80,6 @@ async function preparePersonForm(person) {
         personForm.action = "/editor/persons/" + person.id + "/";
     }
     return personForm;
-}
-
-async function getPersonsListDB() {
-    const result = await db.queryDB('SELECT * FROM persons ORDER BY last_name ASC;');
-    return result.rows;
 };
 
 async function getPersonDB(id) {
@@ -114,4 +89,4 @@ async function getPersonDB(id) {
   }
   const result = await db.queryDB(query);
   return result.rows[0];
-}
+};

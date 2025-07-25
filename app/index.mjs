@@ -15,9 +15,15 @@ import './strategies/local-strategy.mjs'
 const APPPORT = process.env.APPPORT || 3001;
 const COOKIESECRET = process.env.COOKIESECRET;
 
+logger.level = process.env.LOGLEVEL;
+logger.info('App Started. Hello!');
+logger.info('Loglevel is ' + logger.level);
+logger.debug('Debug loglevel check');
+logger.silly('Silly loglevel check');
+
 const app = express();
 const pgPool = getDB();
-logger.info('App Started. Hello!');
+
 app.use(express.static('public'))
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
