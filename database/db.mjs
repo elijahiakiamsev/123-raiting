@@ -48,18 +48,19 @@ export async function queryDB(query) {
         logger.error('No query for database')
         return null;
     };
+    logger.silly(`📥 query ${JSON.stringify(query).slice(0,80)}`);
     try {
         const res = await db.query(query);
-//        logger.debug('queryDB response recieved, example: ' + JSON.stringify(res.rows[0]));
+        logger.silly('📤 response ' + JSON.stringify(res.rows[0]));
         return res;
      } catch (err) {
-        logger.error('queryDB error: '+ err);
+        logger.error('📤 '+ err);
         return null;
      }
 };
 
 export async function testDB() {
-    const query = 'SELECT * FROM PERSONS WHERE id = 1;';
+    const query = 'SELECT person_name FROM PERSONS WHERE id = 1;';
     const res = await queryDB(query);
     var testResult = true;
     if (res.rows[0].person_name != 'Илья Якямсев') {

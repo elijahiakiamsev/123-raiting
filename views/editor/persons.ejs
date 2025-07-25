@@ -13,9 +13,9 @@
     <tr>
         <td><%= person.id %></td>
         <td><a href="/editor/persons/<%= person.id %>/">
-            <%= person.last_name %> <%= person.first_name %></a></td>
-        <td><form action="/editor/persons/<%=person.id%>/delete/" method="delete" enctype="multipart/form-data">
-            <button type="submit" value="Submit">Удалить</button>
+            <%= person.last_name %> <%= person.first_name %> </a></td>
+        <td><form action="/editor/persons/<%=person.id%>/delete/" method="post" enctype="multipart/form-data">
+                <button type="submit" value="Submit" onclick="return confirm('Are you sure to delete <%= person.last_name %> <%= person.first_name %>?')">Удалить</button>
         </form></td>
     </tr>
             <% } %>
