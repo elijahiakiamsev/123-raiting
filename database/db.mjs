@@ -74,12 +74,16 @@ export async function testDB() {
 
 // Direct queries for mass queries
 export async function getPersonsListDB() {
+    logger.silly("Getting persons list from db...");
     const result = await queryDB('SELECT * FROM persons;');
+    logger.silly("Persons list recieved.");
     return result.rows;
 };
 
 export async function getPaywallsListDB() {
+    logger.silly("Getting paywalls list from db...");
     const result = await queryDB('SELECT * FROM paywalls;');
+    logger.silly("Paywalls list delivered.");
     return result.rows;
 }
 

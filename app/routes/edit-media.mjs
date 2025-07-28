@@ -24,13 +24,16 @@ router.get('/editor/media/', isLogged, async (request, response) => {
 })
 
 router.get('/editor/media/add', isLogged, async (request, response) => {
-  const persons = await getPersonsListDB();
-  const paywalls = await getPaywallsListDB();
-  const webPageData = {
-    "persons": persons.rows,
-    "paywalls": paywalls.rows
-  };
- response.render('editor/media-add.ejs', {webPageData: webPageData});
+    logger.debug("😀/editor/media/add is rendering...");
+    const persons = await getPersonsListDB();
+    const paywalls = await getPaywallsListDB();
+    const webPageData = {
+        "persons": persons,
+        "paywalls": paywalls
+    };
+    console.log(JSON.stringify(webPageData, 2));
+    response.render('editor/media-add.ejs', {webPageData: webPageData});
+    logger.debug("😀/editor/media/add rendered.");
 });
 
 router.get('/editor/media/:id', isLogged, async (request, response) => {
