@@ -25,12 +25,20 @@ router.get('/editor/persons/:id', isLogged, async (request, response) => {
     logger.debug(`😀/editor/persons/${Number(request.params.id)} rendering end`);
 });
 
+router.post('/editor/persons/:id', isLogged, upload.none(), async (request, response) => {
+    const id = Number(request.params.id);
+    logger.debug(`😀/editor/persons/${id}/ is updating...`);
+    await Page.updatePerson(id, request.body);
+    logger.debug(`😀/editor/persons/${id}/ updated, redirecting to persons page...`);
+    response.redirect(`/editor/persons/${id}`);
+});
+
 router.post('/editor/persons/:id/delete', isLogged, upload.none(), async (request, response) => {
     const id = Number(request.params.id);
     logger.debug(`😀/editor/persons/${id}/deleting...`);
     await Page.deletePerson(id);
     logger.debug(`😀/editor/persons/${id}/deleted, redirecting to persons page...`);
-    response.redirect('/editor/persons/');
+    response.redirect(`/editor/persons/`);
 });
 
 router.post('/editor/persons/add', isLogged, upload.none(), async (request, response) => {

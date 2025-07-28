@@ -114,10 +114,28 @@ async function preparePersonForm(person) {
         personForm.fields.uri.value = person.uri;
         personForm.fields.personID.value = person.id;
         personForm.fields.selfIdentity.value = person.self_identity;
-        personForm.action = "/editor/persons/" + person.id + "/";
+        personForm.action = "/editor/persons/" + person.id;
     }
     logger.silly(`Person form (${m}) has prepared.`);
     return personForm;
+};
+
+export async function updatePerson(id, person) {
+    var personName = `${person.firstName} ${person.lastName}`;
+    logger.silly(`Preparing a person to update (${personName}).`);
+    if (!person.selfIdentity||(person.selfIdentity=='')) {person.selfIdentity = 'he/him'};
+    logger.silly(`Processed selfIdentity is '${person.selfIdentity}'.`);
+    var updatedPersonData = await updatePersonDB(
+        id,
+        person.firstName,
+        person.lastName,
+        person.uri,
+        person.selfIdentity,
+        personName
+    );
+    const result = 1;
+    logger.silly(`Person updated.`);
+    return result;
 };
 
 async function addPerson(person) {
@@ -125,6 +143,7 @@ async function addPerson(person) {
     logger.silly(`Preparing a new person to store (${personName}).`);
     if (!person.selfIdentity||(person.selfIdentity=='')) {person.selfIdentity = 'he/him'};
     logger.silly(`Processed selfIdentity is '${person.selfIdentity}'.`);
+    console.log(person);
     var storedPersonData = await addPersonDB(
         person.firstName,
         person.lastName,
@@ -143,6 +162,7 @@ export async function deletePerson(id) {
     logger.silly(`Person deleted, id ${id}.`);
 };
 
+
 async function addPersonDB(firstName, lastName, uri, selfIdentity, personName) {
     logger.silly(`Store new person in DB (${firstName} : ${lastName} : ${uri} : ${selfIdentity} : ${personName})...`);
     const query = {
@@ -156,6 +176,19 @@ async function addPersonDB(firstName, lastName, uri, selfIdentity, personName) {
     return result;
 };
 
+async function updatePersonDB(id, firstName, lastName, uri, selfIdentity, personName) {
+    logger.silly(`Update person in DB (${id} : ${firstName} : ${lastName} : ${uri} : ${selfIdentity} : ${personName})...`);
+    const query = {
+        text: `UPDATE persons 
+        SET first_name = $1, last_name = $2, uri = $3, self_identity = $4, person_name = $5
+        WHERE id = $6;`,
+        values: [firstName, lastName, uri, selfIdentity, personName, id]
+    };
+    const result = await db.queryDB(query);
+    logger.silly(`Updated person in DB.`);
+    return result;
+};
+
 async function deletePersonDB(id) {
     const query = {
         text: `DELETE FROM collaborators WHERE person_id = ${id};
@@ -164,6 +197,7 @@ async function deletePersonDB(id) {
     const result = await db.queryDB(query);
     return result;
 };
+
 async function getPersonDB(id) {
   const query = {
     text: `SELECT * FROM persons WHERE id = $1;`,
