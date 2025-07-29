@@ -1,0 +1,38 @@
+<% wp = webPageData;
+const year = wp.content.year;
+const dateOptions = {
+    dateStyle: 'full',
+    timeStyle: 'short',
+    hourCycle: 'h23',
+    timeZone: 'Europe/Moscow'}%>
+<%- include('common/header1', {webPageData: wp}); %>
+<p>Рейтинг обновляется примерно раз в день.
+    Последнее обновление:
+    <%= wp.content.lastScanDate.toLocaleString("ru-RU", dateOptions) %>
+    по Москве.</p>
+<% const r = wp.content.youtubeRaiting %>
+<table>
+<tr>
+    <th></th>
+    <th>Концерт</th>
+    <th>Комик(есса)</th>
+    <th>Просмотры</th>
+    <th>+ за сутки</th>
+</tr>
+<% for (i=0; i < r.length; i++) { %>
+<tr>
+    <td class="statnumbers"><%= i+1 %></td>
+    <td><a href="<%= r[i].web_link %>"><%= r[i].title %></a><%  if (!year) { %><small>/<%= r[i].year %></small><% }; %></td>
+    <td><%= r[i].person_name %></td>
+    <td class="statnumbers"><%= r[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
+    <td class="statnumbers">
+        <% if (r[i].delta) { %>
+        <%= r[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
+        <% } else { %>-<% } %>
+        </td>
+</tr>
+    <% } %>
+</table>
+
+<p>Собраны работы длиной более сорока минут. С некоторыми исключениями.</p>
+<%- include('common/footer', {webPageData: wp}); %>

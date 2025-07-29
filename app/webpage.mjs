@@ -12,5 +12,6 @@ export const breadCrumbs = {
     persons: {text: "люди", uri: "/p/"},
     concerts: {text: "концерты", uri: "/c/"},
     editor: {text: "редактор", uri: "/editor/"},
-    editorPersons: {text: "персоны", uri: "/editor/persons/"}
+    editorPersons: {text: "персоны", uri: "/editor/persons/"},
+    youtube: {text: "Youtube", uri: "youtube"}
 };
