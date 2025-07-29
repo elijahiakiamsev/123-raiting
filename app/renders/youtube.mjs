@@ -17,7 +17,6 @@ export async function prepareYoutubeMediaRaiting(year) {
     }
     pageData.title = 'Текущиe просмотры концертов';
     logger.silly(`Youtube media raiting page has prepared.`);
-    console.log(pageData);
     return pageData;
 };
 
