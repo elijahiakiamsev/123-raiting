@@ -1,4 +1,4 @@
-hhhmport ignition from './initenv.mjs'
+import ignition from './initenv.mjs'
 await ignition();
 import {getDB} from './../database/db.mjs';
 import express from "express";
