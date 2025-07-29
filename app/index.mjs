@@ -1,4 +1,4 @@
-import ignition from './initenv.mjs'
+hhhmport ignition from './initenv.mjs'
 await ignition();
 import {getDB} from './../database/db.mjs';
 import express from "express";
@@ -10,6 +10,7 @@ import passport from 'passport';
 import pgSession from 'connect-pg-simple';
 import logger from "./logger.mjs";
 import routes from './routes/index.mjs'
+import scheduleScan  from './scans/schedule.mjs'
 import './strategies/local-strategy.mjs'
 
 const APPPORT = process.env.APPPORT || 3001;
@@ -45,6 +46,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(routes);
+
+await scheduleScan();
 
 app.get('/privacy_policy/', (request, response) => {
     response.sendFile(path.resolve(import.meta.dirname + '/../public/privacy_policy.html'));
