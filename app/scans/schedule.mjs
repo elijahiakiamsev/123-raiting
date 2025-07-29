@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import logger from './../logger.mjs';
 import fetch from 'node-fetch';
+import * as youtubeTools from './youtube-scan.mjs'
 
 export default async function scheduleScan() {
     logger.silly("Paywalls scan scheduling started...");
@@ -11,6 +12,8 @@ export default async function scheduleScan() {
 
 const youtubeScan = async () => {
     logger.silly("Youtybe scan started...");
-    await fetch(`http://${process.env.HOST}:${process.env.APPPORT}/editor/youtubescan/`);
+    const stats = await youtubeTools.getYoutubeStatsByPages();
+    await youtubeTools.storeScanvideoUris(stats);
+    await youtubeTools.recalculateDeltas();
     logger.silly("Youtube scan finished.");
 };
