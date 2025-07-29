@@ -13,5 +13,5 @@ export const breadCrumbs = {
     concerts: {text: "концерты", uri: "/c/"},
     editor: {text: "редактор", uri: "/editor/"},
     editorPersons: {text: "персоны", uri: "/editor/persons/"},
-    youtube: {text: "Youtube", uri: "/youtube/eval "$(ssh-agent -s)" && ssh-add ~/.ssh/gitHubKey"}
+    youtube: {text: "Youtube", uri: "/youtube/"}
 };
