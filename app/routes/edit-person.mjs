@@ -25,6 +25,13 @@ router.get('/editor/persons/:id', isLogged, async (request, response) => {
     logger.debug(`😀/editor/persons/${Number(request.params.id)} rendering end`);
 });
 
+router.post('/editor/persons/add', isLogged, upload.none(), async (request, response) => {
+    logger.debug(`😀/editor/persons/add POST adding a person is rendering...`);
+    response.render('editor/person.ejs', 
+      {webPageData: await Page.preparePersonHasAdded(request.body)});
+    logger.debug(`😀/editor/persons/add POST adding a person has rendered.`);
+});
+
 router.post('/editor/persons/:id', isLogged, upload.none(), async (request, response) => {
     const id = Number(request.params.id);
     logger.debug(`😀/editor/persons/${id}/ is updating...`);
@@ -39,13 +46,6 @@ router.post('/editor/persons/:id/delete', isLogged, upload.none(), async (reques
     await Page.deletePerson(id);
     logger.debug(`😀/editor/persons/${id}/deleted, redirecting to persons page...`);
     response.redirect(`/editor/persons/`);
-});
-
-router.post('/editor/persons/add', isLogged, upload.none(), async (request, response) => {
-    logger.debug(`😀/editor/persons/add POST adding a person is rendering...`);
-    response.render('editor/person.ejs', 
-      {webPageData: await Page.preparePersonHasAdded(request.body)});
-    logger.debug(`😀/editor/persons/add POST adding a person has rendered.`);
 });
 
 export default router;

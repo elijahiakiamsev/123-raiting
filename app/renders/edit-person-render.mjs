@@ -62,6 +62,7 @@ export async function preparePersonHasAdded(person) {
 };
 
 // person form for both stances : with or without id (json)
+
 async function preparePersonForm(person) {
     var m = '';
     !person ? m = 'empty' : m = `${person.first_name} ${person.last_name}`;
@@ -116,6 +117,7 @@ async function preparePersonForm(person) {
         personForm.fields.selfIdentity.value = person.self_identity;
         personForm.action = "/editor/persons/" + person.id;
     }
+    console.log(personForm);
     logger.silly(`Person form (${m}) has prepared.`);
     return personForm;
 };
