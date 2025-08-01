@@ -16,6 +16,10 @@ export async function prepareYoutubeMediaRaiting(year) {
         youtubeRaiting: await getYoutubeRaiting()
     }
     pageData.title = 'Текущиe просмотры концертов';
+    if (year) {
+        pageData.title = `${year} год выпуска`;
+        pageData.breadCrumbs.push({text: 'полный рейтинг', uri:'/youtube/full/'});
+    };
     logger.silly(`Youtube media raiting page has prepared.`);
     return pageData;
 };

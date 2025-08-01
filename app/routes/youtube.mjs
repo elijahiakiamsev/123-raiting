@@ -16,23 +16,14 @@ router.get('/youtube/full/', async (request, response) => {
 })
 
 router.get('/youtube/full/:year/', async (request, response) => {
-  const year = request.params.year;
-  if(!year.match("^[0-9]{4}$")){
-    response.status(404).send('404 - no that page');
-  }
-  const youtubeRaiting = await Page.getYoutubeRaiting(null, year);
-  const lastScanDate = await Page.getYoutybeScanDate();
-  const webPageData = {
-    'year' : year,
-    'lastScanDate': lastScanDate,
-    'youtubeRaiting': youtubeRaiting
-  }
-  if (!webPageData || webPageData == {}) {
-    response.status(404).send('404 - no that page');
-    return;
-  }
-  logger.debug('Youtube raiting delivered');
-  response.render('youtube-now.ejs', {webPageData: webPageData});
+    const year = request.params.year;
+    logger.debug(`😀/youtube/full/${year} is rendering...`);
+    if(!year.match("^[0-9]{4}$")){
+        response.status(404).send('404 - no that page');
+    }
+    response.render('youtube-now1.ejs',
+        {webPageData: await Page.prepareYoutubeMediaRaiting(year)});
+    logger.debug(`😀/youtube/full/${year} is rendering...`);
 })
 
 router.get('/youtube/concerts/today/', async (request, response) => {
