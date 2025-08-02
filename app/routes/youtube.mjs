@@ -23,7 +23,7 @@ router.get('/youtube/full/:year/', async (request, response) => {
     }
     response.render('youtube-now1.ejs',
         {webPageData: await Page.prepareYoutubeMediaRaiting(year)});
-    logger.debug(`😀/youtube/full/${year} is rendering...`);
+    logger.debug(`😀/youtube/full/${year} rendered.`);
 })
 
 router.get('/youtube/concerts/today/', async (request, response) => {

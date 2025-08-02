@@ -13,7 +13,7 @@ export async function prepareYoutubeMediaRaiting(year) {
     pageData.content = {
         lastScanDate: await getYoutybeScanDate(),
         year: year || null,
-        youtubeRaiting: await getYoutubeRaiting()
+        youtubeRaiting: await getYoutubeRaiting(null, year)
     }
     pageData.title = 'Текущиe просмотры концертов';
     if (year) {
