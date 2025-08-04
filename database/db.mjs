@@ -75,7 +75,7 @@ export async function testDB() {
 // Direct queries for mass queries
 export async function getPersonsListDB() {
     logger.silly("Getting persons list from db...");
-    const result = await queryDB('SELECT * FROM persons;');
+    const result = await queryDB('SELECT * FROM persons ORDER BY last_name;');
     logger.silly("Persons list recieved.");
     return result.rows;
 };

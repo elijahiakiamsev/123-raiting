@@ -21,7 +21,7 @@
     <select name="person">
         <% for (var i=0; i < webPageData.persons.length; i++) { %>
             <% person = webPageData.persons[i] %>
-        <option value="<%=person.id %>"><%=person.person_name %></option>
+        <option value="<%=person.id %>"><%=person.last_name %> <%=person.first_name %></option>
         <% } %>
     </select>
     <br><br>
