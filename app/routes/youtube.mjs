@@ -43,20 +43,15 @@ router.get('/youtube/concerts/today/', async (request, response) => {
 })
 
 router.get('/youtube/comedians/today/', async (request, response) => {
-  var webPageData = {};
-  const comedianTrend= await Page.getYoutubeTrendingComedians()
-  const lastScanDate = await Page.getYoutybeScanDate()
-  webPageData = {
+  const comedianTrend= await Page.getYoutubeTrendingComedians();
+  const lastScanDate = await Page.getYoutybeScanDate();
+  const webPageData = {
     'lastScanDate': lastScanDate,
     'comedianTrend': comedianTrend
-  }
-  if (!webPageData || webPageData == {}) {
-    response.status(404).send('404 - no that page');
-    return;
-  }
+  };
   logger.debug('Youtube raiting delivered');
   response.render('youtube-comedians-today.ejs', {webPageData: webPageData});
-})
+});
 
 router.get('/youtube/', async (request, response) => {
   var webPageData = {};
