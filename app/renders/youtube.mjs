@@ -24,6 +24,24 @@ export async function prepareYoutubeMediaRaiting(year) {
     return pageData;
 };
 
+export async function prepareYoutube() {
+    logger.silly(`Youtube page is preparing...`);
+    var pageData = wp.CleanWebpage;
+    pageData.breadCrumbs = [
+        wp.breadCrumbs.home,
+    ];
+    pageData.content = {
+        lastScanDate: await getYoutybeScanDate(),
+        concertsPerYears: await getYoutubeConcertsByYears(),
+        raitingYear: await getYoutubeRaiting(20, null),
+        youtubeTrend: await getYoutubeTrendingNow(20, null),
+        comedianTrend: await getYoutubeTrendingComedians(20)
+    }
+    pageData.title = 'YouTube обстановка';
+    logger.silly(`Youtube page has prepared.`);
+    return pageData;
+};
+
 async function getYoutubeRaitingFromDB(limit, year) {
   var limit_expression = '';
   var year_expression = '';

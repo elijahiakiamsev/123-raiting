@@ -10,7 +10,7 @@ const router = Router();
 router.get('/youtube/full/', async (request, response) => {
     logger.debug("😀/youtube/full/ is rendering...");
     var webPageData = {};
-    response.render('youtube-now1.ejs', 
+    response.render('youtube-now.ejs', 
         {webPageData: await Page.prepareYoutubeMediaRaiting()});
     logger.debug("😀/youtube/full/ rendered.");
 })
@@ -21,7 +21,7 @@ router.get('/youtube/full/:year/', async (request, response) => {
     if(!year.match("^[0-9]{4}$")){
         response.status(404).send('404 - no that page');
     }
-    response.render('youtube-now1.ejs',
+    response.render('youtube-now.ejs',
         {webPageData: await Page.prepareYoutubeMediaRaiting(year)});
     logger.debug(`😀/youtube/full/${year} rendered.`);
 })
@@ -54,25 +54,10 @@ router.get('/youtube/comedians/today/', async (request, response) => {
 });
 
 router.get('/youtube/', async (request, response) => {
-  var webPageData = {};
-  const concertsByYears = await Page.getYoutubeConcertsByYears();
-  const youtubeRaiting = await Page.getYoutubeRaiting(20);
-  const youtubeTrend = await Page.getYoutubeTrendingNow(20);
-  const comedianTrend= await Page.getYoutubeTrendingComedians(20)
-  const lastScanDate = await Page.getYoutybeScanDate()
-  webPageData = {
-    'concertsByYears' : concertsByYears,
-    'youtubeRaiting': youtubeRaiting,
-    'lastScanDate': lastScanDate,
-    'youtubeTrend': youtubeTrend,
-    'comedianTrend': comedianTrend
-  }
-  if (!webPageData || webPageData == {}) {
-    response.status(404).send('404 - no that page');
-    return;
-  }
-  logger.debug('Youtube raiting delivered');
-  response.render('youtube.ejs', {webPageData: webPageData});
+    logger.debug(`😀/youtube/ is rendering...`);
+    response.render('youtube.ejs',
+        {webPageData: await Page.prepareYoutube()});
+    logger.debug(`😀/youtube/ rendered.`);
 })
 
 export default router;

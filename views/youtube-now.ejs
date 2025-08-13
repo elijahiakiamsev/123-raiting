@@ -1,19 +1,16 @@
-<% wp = webPageData; %>
-<%- include('common/header'); %>
-<% const raiting = webPageData.youtubeRaiting
-    const year = webPageData.year
-   const dateOptions = {
+<% wp = webPageData;
+const year = wp.content.year;
+const dateOptions = {
     dateStyle: 'full',
     timeStyle: 'short',
     hourCycle: 'h23',
     timeZone: 'Europe/Moscow'}%>
-
-<h1>Youtube рейтинг<% if (year) { %> концертов <%=webPageData.year%> года выхода<% }; %></h1>
+<%- include('common/header1', {webPageData: wp}); %>
 <p>Рейтинг обновляется примерно раз в день.
     Последнее обновление:
-    <%= webPageData.lastScanDate.toLocaleString("ru-RU", dateOptions) %>
+    <%= wp.content.lastScanDate.toLocaleString("ru-RU", dateOptions) %>
     по Москве.</p>
-<p><a href="/">На главную</a> / <a href="/youtube/">Youtube</a></p>
+<% const r = wp.content.youtubeRaiting %>
 <table>
 <tr>
     <th></th>
@@ -22,19 +19,20 @@
     <th>Просмотры</th>
     <th>+ за сутки</th>
 </tr>
-<% for (i=0; i < raiting.length; i++) { %>
+<% for (i=0; i < r.length; i++) { %>
 <tr>
-    <td><%= i+1 %></td>
-    <td><a href="<%= raiting[i].web_link %>"><%= raiting[i].title %></a><%  if (!year) { %><small>/<%= raiting[i].year %></small><% }; %></td>
-    <td><%= raiting[i].person_name %></td>
-    <td style="text-align:right"><%= raiting[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
-    <td style="text-align:right">
-        <% if (raiting[i].delta) { %>
-        <%= raiting[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
+    <td class="statnumbers"><%= i+1 %></td>
+    <td><a href="<%= r[i].web_link %>"><%= r[i].title %></a><%  if (!year) { %><small>/<%= r[i].year %></small><% }; %></td>
+    <td><%= r[i].person_name %></td>
+    <td class="statnumbers"><%= r[i].views_count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %></td>
+    <td class="statnumbers">
+        <% if (r[i].delta) { %>
+        <%= r[i].delta.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, " ") %>
         <% } else { %>-<% } %>
         </td>
 </tr>
     <% } %>
 </table>
+
 <p>Собраны работы длиной более сорока минут. С некоторыми исключениями.</p>
-<%- include('common/footer'); %>
+<%- include('common/footer', {webPageData: wp}); %>
