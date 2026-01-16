@@ -31,7 +31,6 @@ router.get('/editor/media/add', isLogged, async (request, response) => {
         "persons": persons,
         "paywalls": paywalls
     };
-    console.log(JSON.stringify(webPageData, 2));
     response.render('editor/media-add.ejs', {webPageData: webPageData});
     logger.debug("😀/editor/media/add rendered.");
 });
@@ -40,8 +39,8 @@ router.get('/editor/media/:id', isLogged, async (request, response) => {
     var media = await getMediaByIDDB(request.params.id);
     var persons = await getPersonsListDB();
     var paywalls = await getPaywallsListDB();
-    var webPageData = { "persons": persons.rows, 
-                        "paywalls": paywalls.rows,
+    var webPageData = { "persons": persons, 
+                        "paywalls": paywalls,
                         "media": media.rows
                       };
     response.render('editor/media-edit.ejs', {webPageData: webPageData});

@@ -80,7 +80,7 @@ router.get('/editor/paywalls/:id/delete', isLogged, upload.none(), async (reques
 
 async function getPaywallsList() {
   var result = await getPaywallsListDB();
-  return result.rows;
+  return result;
 }
 
 async function preparePaywallToStore(reqBody, id) {

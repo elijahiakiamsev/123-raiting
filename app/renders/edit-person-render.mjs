@@ -117,7 +117,6 @@ async function preparePersonForm(person) {
         personForm.fields.selfIdentity.value = person.self_identity;
         personForm.action = "/editor/persons/" + person.id;
     }
-    console.log(personForm);
     logger.silly(`Person form (${m}) has prepared.`);
     return personForm;
 };
