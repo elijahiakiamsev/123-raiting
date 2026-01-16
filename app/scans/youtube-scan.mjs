@@ -3,11 +3,10 @@ import logger from "./../logger.mjs";
 import fetch from 'node-fetch';
 
 async function youtubeUrlParser(url) {
-    logger.silly('Youtube url parser start... ' + url);
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     var match = url.match(regExp);
     var result = (match&&match[7].length==11)? match[7] : false;
-    logger.silly('Youtube url parser done: ' + result);
+    if (!result) {logger.error('Parser wrong for url ${url}')};
     return result;
 }
 
@@ -29,15 +28,14 @@ async function getYoutubeStatUriListDB(offset, limit) {
 
 // read the whole list on fetch
 function createUrl(videoUrl) {
-    logger.silly('Creating Youtube URL from ' + videoUrl);
-    const youtubeFixedURI = 'https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=';
+    logger.silly('Creating Youtube URL...');
+    const youtubeFixedURI = 'https://youtube.googleapis.com/youtube/v3/videos?part=statistics,status&id=';
     const youtubeApiKey = process.env.YOUTUBEKEY;
-    logger.silly('API key ' + youtubeApiKey);
     const url = youtubeFixedURI
                 + videoUrl
                 + '&key='
                 + youtubeApiKey;
-    logger.silly(`Youtube URL: ${url.slice(68, 90)}`);
+    logger.silly(`Youtube URL created: ${url.slice(68, 90)}`);
     return url;
 };
 
@@ -59,8 +57,8 @@ async function getVideoListStats(videoList) {
     logger.silly('Getting stats from Youtube from one videolist.')
     var videoUri = '';
     for (var i=0; i < videoList.length; i++) {
-        const videoID = await youtubeUrlParser(videoList[i].web_link);
-        videoUri = videoUri.concat(videoID, ',');
+        videoList[i].videoID = await youtubeUrlParser(videoList[i].web_link);
+        videoUri = videoUri.concat(videoList[i].videoID, ',');
     }
     videoUri = videoUri.slice(0, -1);
     var statsPack = await getVideoStats(videoUri);
@@ -68,13 +66,21 @@ async function getVideoListStats(videoList) {
         logger.error('No answer from Youtube');
         return null;
     }
-    var result = [];
-    for (var c = 0; c < statsPack.length; c++){
-        var media_id = videoList[c].id;
-        var count = Number(statsPack[c].statistics.viewCount);
-        result.push({'media_id':media_id,'views': count})
+    if (statsPack.length != videoList.length) {
+        logger.debug(`Recieved less items than sended, ${videoList.length - statsPack.length} items.`);
     };
-    logger.debug(`Recieved from Youtube ${result.length}/${videoList.length} items.`)
+    var result = [];
+    for (var c = 0; c < videoList.length; c++){
+        var count = -1;
+        var oneStat = statsPack.find(element => videoList[c].videoID === element.id);
+        if (oneStat) { count = oneStat.statistics.viewCount }
+        else {
+            logger.debug(`Missing information for ${videoList[c].web_link},
+                media_source_id ${videoList[c].id}`);
+        };
+        result.push({'media_id':videoList[c].id,'views': count})
+    };
+    logger.debug(`Recieved and compiled from Youtube ${result.length}/${videoList.length} items.`)
     return result;
 };
 
